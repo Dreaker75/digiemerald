@@ -116,7 +116,9 @@ enum {
     MENU_SHIFT,
     MENU_PLACE,
     MENU_SUMMARY,
+#if CAN_RELEASE_DIGIMON == TRUE
     MENU_RELEASE,
+#endif
     MENU_MARK,
     MENU_JUMP,
     MENU_WALLPAPER,
@@ -602,7 +604,9 @@ static void Task_ItemToBag(u8);
 static void Task_TakeItemForMoving(u8);
 static void Task_ShowMarkMenu(u8);
 static void Task_ShowMonSummary(u8);
+#if CAN_RELEASE_DIGIMON == TRUE
 static void Task_ReleaseMon(u8);
+#endif
 static void Task_ReshowPokeStorage(u8);
 static void Task_PokeStorageMain(u8);
 static void Task_JumpBox(u8);
@@ -649,8 +653,10 @@ static void MovePartySpriteToNextSlot(struct Sprite *, u16);
 static void SpriteCB_MovePartyMonToNextSlot(struct Sprite *);
 static void MovePartySprites(s16);
 static void DestroyAllPartyMonIcons(void);
+#if CAN_RELEASE_DIGIMON == TRUE
 static void ReshowReleaseMon(void);
 static bool8 ResetReleaseMonSpritePtr(void);
+#endif
 static void SetMovingMonPriority(u8);
 static void SpriteCB_HeldMon(struct Sprite *);
 static struct Sprite *CreateMonIconSprite(u16, u32, s16, s16, u8, u8);
@@ -666,12 +672,14 @@ static void PurgeMonOrBoxMon(u8, u8);
 static void SetShiftedMonData(u8, u8);
 static bool8 TryStorePartyMonInBox(u8);
 static void ResetSelectionAfterDeposit(void);
+#if CAN_RELEASE_DIGIMON == TRUE
 static void InitReleaseMon(void);
 static bool8 TryHideReleaseMon(void);
 static void InitCanReleaseMonVars(void);
 static void ReleaseMon(void);
 static bool32 AtLeastThreeUsableMons(void);
 static s8 RunCanReleaseMon(void);
+#endif
 static void SaveMovingMon(void);
 static void LoadSavedMovingMon(void);
 static void InitSummaryScreenData(void);
@@ -778,7 +786,9 @@ static bool8 MultiMonPlaceChange_Up(void);
 static bool8 MultiMonPlaceChange_Down(void);
 static bool8 MonPlaceChange_CursorDown(void);
 static bool8 MonPlaceChange_CursorUp(void);
+#if CAN_RELEASE_DIGIMON == TRUE
 static void TrySetCursorFistAnim(void);
+#endif
 static bool8 IsCursorOnCloseBox(void);
 static bool8 IsCursorOnBoxTitle(void);
 static bool8 IsCursorInBox(void);
@@ -2664,6 +2674,7 @@ static void Task_OnSelectedMon(u8 taskId)
                 SetPokeStorageTask(Task_DepositMenu);
             }
             break;
+#if CAN_RELEASE_DIGIMON == TRUE
         case MENU_RELEASE:
             if (IsRemovingLastPartyMon())
             {
@@ -2683,6 +2694,7 @@ static void Task_OnSelectedMon(u8 taskId)
                 SetPokeStorageTask(Task_ReleaseMon);
             }
             break;
+#endif
         case MENU_SUMMARY:
             PlaySE(SE_SELECT);
             SetPokeStorageTask(Task_ShowMonSummary);
@@ -2915,6 +2927,7 @@ static void Task_DepositMenu(u8 taskId)
     }
 }
 
+#if CAN_RELEASE_DIGIMON == TRUE
 static void Task_ReleaseMon(u8 taskId)
 {
     switch (sStorage->state)
@@ -3045,6 +3058,7 @@ static void Task_ReleaseMon(u8 taskId)
         break;
     }
 }
+#endif
 
 static void Task_ShowMarkMenu(u8 taskId)
 {
@@ -5035,6 +5049,7 @@ static bool8 MoveShiftingMons(void)
     return TRUE;
 }
 
+#if CAN_RELEASE_DIGIMON == TRUE
 static void SetReleaseMon(u8 mode, u8 position)
 {
     switch (mode)
@@ -5102,6 +5117,7 @@ static bool8 ResetReleaseMonSpritePtr(void)
 
     return TRUE;
 }
+#endif
 
 static void SetMovingMonPriority(u8 priority)
 {
@@ -6479,6 +6495,7 @@ static void ResetSelectionAfterDeposit(void)
     TryRefreshDisplayMon();
 }
 
+#if CAN_RELEASE_DIGIMON == TRUE
 static void InitReleaseMon(void)
 {
     u8 mode;
@@ -6533,6 +6550,7 @@ static void TrySetCursorFistAnim(void)
     if (sIsMonBeingMoved)
         StartSpriteAnim(sStorage->cursorSprite, CURSOR_ANIM_FIST);
 }
+#endif
 
 // If the player is on the listed map (or any map, if none is specified),
 // they may not release their last Pokémon that knows the specified move.
@@ -6553,6 +6571,7 @@ struct
     {MAP_GROUP(EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MAP_NUM(EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MOVE_ROCK_SMASH},
 };
 
+#if CAN_RELEASE_DIGIMON == TRUE
 static void GetRestrictedReleaseMoves(u16 *moves)
 {
     s32 i;
@@ -6727,6 +6746,7 @@ static s8 RunCanReleaseMon(void)
 
     return -1;
 }
+#endif
 
 static void SaveMovingMon(void)
 {
@@ -7741,7 +7761,9 @@ static bool8 SetMenuTexts_Mon(void)
     }
 
     SetMenuText(MENU_MARK);
+#if CAN_RELEASE_DIGIMON == TRUE
     SetMenuText(MENU_RELEASE);
+#endif
     SetMenuText(MENU_CANCEL);
     return TRUE;
 }
@@ -8013,7 +8035,9 @@ static const u8 *const sMenuTexts[] =
     [MENU_SHIFT]      = gPCText_Shift,
     [MENU_PLACE]      = gPCText_Place,
     [MENU_SUMMARY]    = gPCText_Summary,
+#if CAN_RELEASE_DIGIMON == TRUE
     [MENU_RELEASE]    = gPCText_Release,
+#endif
     [MENU_MARK]       = gPCText_Mark,
     [MENU_JUMP]       = gPCText_Jump,
     [MENU_WALLPAPER]  = gPCText_Wallpaper,
