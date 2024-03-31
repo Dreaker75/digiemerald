@@ -62,9 +62,13 @@ static void VBlankCB_TradeEvolutionScene(void);
 static void EvoScene_DoMonAnimAndCry(u8 monSpriteId, u16 speciesId);
 static bool32 EvoScene_IsMonAnimFinished(u8 monSpriteId);
 static void StartBgAnimation(bool8 isLink);
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
 static void StopBgAnimation(void);
+#endif
 static void Task_AnimateBg(u8 taskId);
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
 static void RestoreBgAfterAnim(void);
+#endif
 
 static const u16 sUnusedPal1[] = INCBIN_U16("graphics/evolution_scene/unused_1.gbapal");
 static const u32 sBgAnim_Gfx[] = INCBIN_U32("graphics/evolution_scene/bg.4bpp.lz");
@@ -539,6 +543,7 @@ static void CB2_TradeEvolutionSceneUpdate(void)
     RunTasks();
 }
 
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
 static void CreateShedinja(u16 preEvoSpecies, struct Pokemon *mon)
 {
     u32 data = 0;
@@ -592,11 +597,48 @@ static void CreateShedinja(u16 preEvoSpecies, struct Pokemon *mon)
                 SetMonData(shedinja, MON_DATA_NICKNAME, sText_ShedinjaJapaneseName);
     }
 }
+#endif
+
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+static void CreateEvolution(u16 evoSpecies)
+{
+    u32 data = 0;
+
+    if (evoSpecies == SPECIES_NONE)
+        return;
+
+    s32 i;
+    struct Pokemon newMon;
+    CreateMon(&newMon, evoSpecies, 1, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+
+    SetMonData(&newMon, MON_DATA_NICKNAME, GetSpeciesName(evoSpecies));
+    SetMonData(&newMon, MON_DATA_HELD_ITEM, &data);
+    SetMonData(&newMon, MON_DATA_MARKINGS, &data);
+    SetMonData(&newMon, MON_DATA_ENCRYPT_SEPARATOR, &data);
+
+    for (i = MON_DATA_COOL_RIBBON; i < MON_DATA_COOL_RIBBON + CONTEST_CATEGORIES_COUNT; i++)
+        SetMonData(&newMon, i, &data);
+    for (i = MON_DATA_CHAMPION_RIBBON; i <= MON_DATA_UNUSED_RIBBONS; i++)
+        SetMonData(&newMon, i, &data);
+
+    SetMonData(&newMon, MON_DATA_STATUS, &data);
+    data = MAIL_NONE;
+    SetMonData(&newMon, MON_DATA_MAIL, &data);
+    GiveMonToPlayer(&newMon);
+
+    CalculateMonStats(&newMon);
+    CalculatePlayerPartyCount();
+
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(evoSpecies), FLAG_SET_SEEN);
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(evoSpecies), FLAG_SET_CAUGHT);
+}
+#endif
 
 // States for the main switch in Task_EvolutionScene
 enum {
     EVOSTATE_FADE_IN,
     EVOSTATE_INTRO_MSG,
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
     EVOSTATE_INTRO_MON_ANIM,
     EVOSTATE_INTRO_SOUND,
     EVOSTATE_START_MUSIC,
@@ -609,6 +651,7 @@ enum {
     EVOSTATE_EVO_SOUND,
     EVOSTATE_RESTORE_SCREEN,
     EVOSTATE_EVO_MON_ANIM,
+#endif
     EVOSTATE_SET_MON_EVOLVED,
     EVOSTATE_TRY_LEARN_MOVE,
     EVOSTATE_END,
@@ -645,6 +688,7 @@ static void Task_EvolutionScene(u8 taskId)
     u32 var;
     struct Pokemon *mon = &gPlayerParty[gTasks[taskId].tPartyId];
 
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
     // check if B Button was held, so the evolution gets stopped
     if (gMain.heldKeys == B_BUTTON
         && gTasks[taskId].tState == EVOSTATE_WAIT_CYCLE_MON_SPRITE
@@ -656,12 +700,17 @@ static void Task_EvolutionScene(u8 taskId)
         StopBgAnimation();
         return;
     }
+#endif
 
     switch (gTasks[taskId].tState)
     {
     case EVOSTATE_FADE_IN:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
         gSprites[sEvoStructPtr->preEvoSpriteId].invisible = FALSE;
+#elif EVOLUTION_TYPE == DW3_EVOLUTIONS
+        gSprites[sEvoStructPtr->postEvoSpriteId].invisible = FALSE;
+#endif
         gTasks[taskId].tState++;
         ShowBg(0);
         ShowBg(1);
@@ -676,6 +725,7 @@ static void Task_EvolutionScene(u8 taskId)
             gTasks[taskId].tState++;
         }
         break;
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
     case EVOSTATE_INTRO_MON_ANIM:
         if (!IsTextPrinterActive(0))
         {
@@ -765,6 +815,7 @@ static void Task_EvolutionScene(u8 taskId)
             gTasks[taskId].tState++;
         }
         break;
+#endif
     case EVOSTATE_SET_MON_EVOLVED:
         if (IsCryFinished())
         {
@@ -772,11 +823,15 @@ static void Task_EvolutionScene(u8 taskId)
             BattlePutTextOnWindow(gStringVar4, B_WIN_MSG);
             PlayBGM(MUS_EVOLVED);
             gTasks[taskId].tState++;
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
             SetMonData(mon, MON_DATA_SPECIES, (void *)(&gTasks[taskId].tPostEvoSpecies));
             CalculateMonStats(mon);
             EvolutionRenameMon(mon, gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(gTasks[taskId].tPostEvoSpecies), FLAG_SET_SEEN);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(gTasks[taskId].tPostEvoSpecies), FLAG_SET_CAUGHT);
+#elif EVOLUTION_TYPE == DW3_EVOLUTIONS
+            CreateEvolution(gTasks[taskId].tPostEvoSpecies);
+#endif
             IncrementGameStat(GAME_STAT_EVOLVED_POKEMON);
         }
         break;
@@ -821,9 +876,10 @@ static void Task_EvolutionScene(u8 taskId)
                 StopMapMusic();
                 Overworld_PlaySpecialMapMusic();
             }
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
             if (!gTasks[taskId].tEvoWasStopped)
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, mon);
-
+#endif
             DestroyTask(taskId);
             FreeMonSpritesGfx();
             FREE_AND_SET_NULL(sEvoStructPtr);
@@ -1657,6 +1713,7 @@ static void UNUSED PauseBgPaletteAnim(void)
 
 #undef tPaused
 
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
 static void StopBgAnimation(void)
 {
     u8 taskId;
@@ -1681,6 +1738,7 @@ static void RestoreBgAfterAnim(void)
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG3_ON | DISPCNT_BG0_ON | DISPCNT_OBJ_1D_MAP);
     Free(sBgAnimPal);
 }
+#endif
 
 static void EvoScene_DoMonAnimAndCry(u8 monSpriteId, u16 speciesId)
 {

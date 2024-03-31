@@ -43,6 +43,9 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "player_pc.h"
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+#include "pokedex.h"
+#endif
 #include "pokemon.h"
 #include "pokemon_icon.h"
 #include "pokemon_jump.h"
@@ -5496,7 +5499,12 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
         if (holdEffectParam == 0)
             targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL);
 
-        if (targetSpecies != SPECIES_NONE)
+        if (targetSpecies != SPECIES_NONE
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+            // If the player already obtained the Digimon before, don't evolve it again
+            && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT)
+#endif
+        )
         {
             RemoveBagItem(gSpecialVar_ItemId, 1);
             FreePartyPointers();
@@ -5681,7 +5689,12 @@ static void PartyMenuTryEvolution(u8 taskId)
     sInitialLevel = 0;
     sFinalLevel = 0;
 
-    if (targetSpecies != SPECIES_NONE)
+    if (targetSpecies != SPECIES_NONE
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+        // If the player already obtained the Digimon before, don't evolve it again
+        && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT)
+#endif
+    )
     {
         FreePartyPointers();
         if (ItemId_GetFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))

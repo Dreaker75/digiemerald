@@ -3408,7 +3408,12 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                         {
                             u16 targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL);
 
-                            if (targetSpecies != SPECIES_NONE)
+                            if (targetSpecies != SPECIES_NONE
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+                                // If the player already obtained the Digimon before, don't evolve it again
+                                && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT)
+#endif
+                            )
                             {
                                 BeginEvolutionScene(mon, targetSpecies, FALSE, partyIndex);
                                 return FALSE;
@@ -5919,7 +5924,12 @@ void TrySpecialOverworldEvo(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u16 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, evoMethod, SPECIES_NONE);
-        if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & gBitTable[i]))
+        if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & gBitTable[i])
+#if EVOLUTION_TYPE == DW3_EVOLUTIONS
+            // If the player already obtained the Digimon before, don't evolve it again
+            && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT)
+#endif
+        )
         {
             sTriedEvolving |= gBitTable[i];
             if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.

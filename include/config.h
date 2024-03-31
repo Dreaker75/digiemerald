@@ -76,8 +76,12 @@
 #define GEN_LATEST GEN_9
 
 // General settings
-#define EXPANSION_INTRO              TRUE    // If TRUE, a custom RHH intro will play after the vanilla copyright screen.
-#define POKEDEX_PLUS_HGSS            FALSE   // If TRUE, enables the custom HGSS style Pokedex.
+#define EXPANSION_INTRO              FALSE   // If TRUE, a custom RHH intro will play after the vanilla copyright screen.
+#define POKEDEX_PLUS_HGSS            TRUE    // If TRUE, enables the custom HGSS style Pokedex.
 #define SUMMARY_SCREEN_NATURE_COLORS TRUE    // If TRUE, nature-based stat boosts and reductions will be red and blue in the summary screen.
+
+// NEW: Evolution settings
+#define POKEMON_EVOLUTIONS      0
+#define DW3_EVOLUTIONS          1   // Digimon World 3 evolution style - Evolving will always generate a new Digimon Shedinja-style. The main Digimon doesn't evolve
 
 #endif // GUARD_CONFIG_H
