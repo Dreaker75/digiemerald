@@ -88,7 +88,9 @@ enum {
     MENU_TAKE_MAIL,
     MENU_READ,
     MENU_CANCEL2,
+#if CAN_SWITCH_IN_BATTLE == TRUE
     MENU_SHIFT,
+#endif
     MENU_SEND_OUT,
     MENU_ENTER,
     MENU_NO_ENTRY,

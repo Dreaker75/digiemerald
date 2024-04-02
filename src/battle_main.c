@@ -2963,7 +2963,11 @@ static void BattleStartClearSetData(void)
     memset(&gBattleResults, 0, sizeof(gBattleResults));
     memset(&gBattleScripting, 0, sizeof(gBattleScripting));
 
+#if CAN_SWITCH_DIGIMON == TRUE
     gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
+#else
+    gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
+#endif
     gBattleScripting.expOnCatch = (B_EXP_CATCH >= GEN_6);
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
