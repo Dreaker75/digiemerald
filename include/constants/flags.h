@@ -1395,7 +1395,7 @@
 #define FLAG_SYS_USE_STRENGTH                       (SYSTEM_FLAGS + 0x29)
 #define FLAG_SYS_WEATHER_CTRL                       (SYSTEM_FLAGS + 0x2A)
 #define FLAG_SYS_CYCLING_ROAD                       (SYSTEM_FLAGS + 0x2B)
-#define FLAG_SYS_SAFARI_MODE                        (SYSTEM_FLAGS + 0x2C)
+#define FLAG_SYS_UNUSED_0x88C                       (SYSTEM_FLAGS + 0x2C)
 #define FLAG_SYS_CRUISE_MODE                        (SYSTEM_FLAGS + 0x2D)
 
 #define FLAG_UNUSED_0x88E                           (SYSTEM_FLAGS + 0x2E) // Unused Flag

@@ -1571,7 +1571,7 @@ const u16 gMentalHerbCureStringIds[] =
     [B_MSG_MENTALHERBCURE_DISABLE]     = STRINGID_PKMNMOVEDISABLEDNOMORE,
 };
 
-const u16 gStartingStatusStringIds[B_MSG_STARTING_STATUS_COUNT] = 
+const u16 gStartingStatusStringIds[B_MSG_STARTING_STATUS_COUNT] =
 {
     [B_MSG_TERRAIN_SET_MISTY]       = STRINGID_TERRAINBECOMESMISTY,
     [B_MSG_TERRAIN_SET_ELECTRIC]    = STRINGID_TERRAINBECOMESELECTRIC,
@@ -1950,19 +1950,6 @@ const u16 gInobedientStringIds[] =
     [B_MSG_INCAPABLE_OF_POWER] = STRINGID_PKMNINCAPABLEOFPOWER
 };
 
-const u16 gSafariGetNearStringIds[] =
-{
-    [B_MSG_CREPT_CLOSER]    = STRINGID_CREPTCLOSER,
-    [B_MSG_CANT_GET_CLOSER] = STRINGID_CANTGETCLOSER
-};
-
-const u16 gSafariPokeblockResultStringIds[] =
-{
-    [B_MSG_MON_CURIOUS]    = STRINGID_PKMNCURIOUSABOUTX,
-    [B_MSG_MON_ENTHRALLED] = STRINGID_PKMNENTHRALLEDBYX,
-    [B_MSG_MON_IGNORED]    = STRINGID_PKMNIGNOREDX
-};
-
 const u16 gBerryEffectStringIds[] =
 {
     [B_MSG_CURED_PROBLEM]     = STRINGID_PKMNSITEMCUREDPROBLEM,
@@ -2058,7 +2045,6 @@ const u8 gText_WhatWillPkmnDo2[] = _("What will\n{B_PLAYER_NAME} do?");
 const u8 gText_WhatWillWallyDo[] = _("What will\nWALLY do?");
 const u8 gText_LinkStandby[] = _("{PAUSE 16}Link standby…");
 const u8 gText_BattleMenu[] = _("FIGHT{CLEAR_TO 56}BAG\nPOKéMON{CLEAR_TO 56}RUN");
-const u8 gText_SafariZoneMenu[] = _("BALL{CLEAR_TO 56}{POKEBLOCK}\nGO NEAR{CLEAR_TO 56}RUN");
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");
 const u8 gText_MoveInterfacePpType[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}PP\nTYPE/");

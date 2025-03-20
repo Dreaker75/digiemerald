@@ -21,7 +21,6 @@
 #include "palette.h"
 #include "pokeblock.h"
 #include "pokemon.h"
-#include "safari_zone.h"
 #include "scanline_effect.h"
 #include "sound.h"
 #include "string_util.h"
@@ -114,7 +113,6 @@ static void PokeblockAction_UseOnField(u8);
 static void PokeblockAction_Toss(u8);
 static void PokeblockAction_Cancel(u8);
 static void PokeblockAction_UseInBattle(u8);
-static void PokeblockAction_UseOnPokeblockFeeder(u8);
 static void PokeblockAction_GiveToContestLady(u8);
 static void TossedPokeblockMessage(u8);
 static void CloseTossPokeblockWindow(u8);
@@ -219,7 +217,6 @@ static const struct MenuAction sPokeblockMenuActions[] =
     [PKBL_TOSS]          = {gMenuText_Toss, {PokeblockAction_Toss}},
     [PKBL_CANCEL]        = {gText_Cancel2, {PokeblockAction_Cancel}},
     [PKBL_USE_IN_BATTLE] = {gMenuText_Use, {PokeblockAction_UseInBattle}},
-    [PKBL_USE_ON_FEEDER] = {gMenuText_Use, {PokeblockAction_UseOnPokeblockFeeder}},
     [PKBL_GIVE_TO_LADY]  = {gMenuText_Give2, {PokeblockAction_GiveToContestLady}},
 };
 
@@ -1268,16 +1265,6 @@ static void PokeblockAction_UseInBattle(u8 taskId)
     else
         gSpecialVar_ItemId += 3;
 
-    FadePaletteAndSetTaskToClosePokeblockCase(taskId);
-}
-
-static void PokeblockAction_UseOnPokeblockFeeder(u8 taskId)
-{
-    SafariZoneActivatePokeblockFeeder(gSpecialVar_ItemId);
-    StringCopy(gStringVar1, gPokeblockNames[gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId].color]);
-    gSpecialVar_Result = gSpecialVar_ItemId;
-    TryClearPokeblock(gSpecialVar_ItemId);
-    gSpecialVar_ItemId = 0;
     FadePaletteAndSetTaskToClosePokeblockCase(taskId);
 }
 

@@ -49,7 +49,6 @@ static s32 AI_PreferStrongestMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 
 static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -87,7 +86,7 @@ static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
     [27] = NULL,                     // Unused
     [28] = NULL,                     // Unused
     [29] = AI_Roaming,              // AI_FLAG_ROAMING
-    [30] = AI_Safari,               // AI_FLAG_SAFARI
+    [30] = NULL,                    // AI_FLAG_SAFARI
     [31] = AI_FirstBattle,          // AI_FLAG_FIRST_BATTLE
 };
 
@@ -103,7 +102,7 @@ void BattleAI_SetupItems(void)
 
     // Items are allowed to use in ONLY trainer battles.
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
+        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_BATTLE_TOWER
                                | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_FRONTIER
                                | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED_LINK)
             )
@@ -156,8 +155,6 @@ static u32 GetAiFlags(u16 trainerId)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
             flags = GetAiScriptsInRecordedBattle();
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-            flags = AI_FLAG_SAFARI;
         else if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
             flags = AI_FLAG_ROAMING;
         else if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
@@ -5172,19 +5169,6 @@ static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         return score;
 
     AI_Flee();
-    return score;
-}
-
-// Safari pokemon logic
-static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
-{
-    u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
-
-    if ((Random() % 100) < safariFleeRate)
-        AI_Flee();
-    else
-        AI_Watch();
-
     return score;
 }
 

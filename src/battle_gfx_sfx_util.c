@@ -64,11 +64,6 @@ static const struct CompressedSpriteSheet sSpriteSheets_DoublesOpponentHealthbox
     {gHealthboxDoublesOpponentGfx, 0x800, TAG_HEALTHBOX_OPPONENT2_TILE}
 };
 
-static const struct CompressedSpriteSheet sSpriteSheet_SafariHealthbox =
-{
-    gHealthboxSafariGfx, 0x1000, TAG_HEALTHBOX_SAFARI_TILE
-};
-
 static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_COUNT] =
 {
     {gBlankGfxCompressed, 0x0100, TAG_HEALTHBAR_PLAYER1_TILE},
@@ -714,10 +709,7 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             if (state == 2)
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SafariHealthbox);
-                else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
             }
             else if (state == 3)
                 LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
@@ -789,10 +781,7 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         (*state1)++;
         break;
     case 3:
-        if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && *battler == 0)
-            gHealthboxSpriteIds[*battler] = CreateSafariPlayerHealthboxSprites();
-        else
-            gHealthboxSpriteIds[*battler] = CreateBattlerHealthboxSprites(*battler);
+        gHealthboxSpriteIds[*battler] = CreateBattlerHealthboxSprites(*battler);
 
         (*battler)++;
         if (*battler == gBattlersCount)
@@ -818,8 +807,7 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
     case 5:
         if (GetBattlerSide(*battler) == B_SIDE_PLAYER)
         {
-            if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
-                UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], &gPlayerParty[gBattlerPartyIndexes[*battler]], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], &gPlayerParty[gBattlerPartyIndexes[*battler]], HEALTHBOX_ALL);
         }
         else
         {

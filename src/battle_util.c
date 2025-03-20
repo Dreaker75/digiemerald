@@ -16,7 +16,6 @@
 #include "battle_scripts.h"
 #include "random.h"
 #include "text.h"
-#include "safari_zone.h"
 #include "sound.h"
 #include "sprite.h"
 #include "string_util.h"
@@ -64,33 +63,6 @@ static bool32 CanBeInfinitelyConfused(u32 battler);
 
 extern const u8 *const gBattlescriptsForRunningByItem[];
 extern const u8 *const gBattlescriptsForUsingItem[];
-extern const u8 *const gBattlescriptsForSafariActions[];
-
-static const u8 sPkblToEscapeFactor[][3] = {
-    {
-        [B_MSG_MON_CURIOUS]    = 0,
-        [B_MSG_MON_ENTHRALLED] = 0,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 3,
-        [B_MSG_MON_ENTHRALLED] = 5,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 2,
-        [B_MSG_MON_ENTHRALLED] = 3,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 1,
-        [B_MSG_MON_ENTHRALLED] = 2,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 1,
-        [B_MSG_MON_ENTHRALLED] = 1,
-        [B_MSG_MON_IGNORED]    = 0
-    }
-};
-static const u8 sGoNearCounterToCatchFactor[] = {4, 3, 2, 1};
-static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
 
 static u8 CalcBeatUpPower(void)
 {
@@ -578,26 +550,6 @@ void HandleAction_Run(void)
     }
 }
 
-void HandleAction_WatchesCarefully(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_SafariZoneBallThrow(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gNumSafariBalls--;
-    gLastUsedItem = ITEM_SAFARI_BALL;
-    gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
 void HandleAction_ThrowBall(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
@@ -607,83 +559,6 @@ void HandleAction_ThrowBall(void)
     RemoveBagItem(gLastUsedItem, 1);
     gBattlescriptCurrInstr = BattleScript_BallThrow;
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_ThrowPokeblock(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gBattleCommunication[MULTISTRING_CHOOSER] = gBattleResources->bufferB[gBattlerAttacker][1] - 1;
-    gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][2];
-
-    if (gBattleResults.pokeblockThrows < 255)
-        gBattleResults.pokeblockThrows++;
-    if (gBattleStruct->safariPkblThrowCounter < 3)
-        gBattleStruct->safariPkblThrowCounter++;
-    if (gBattleStruct->safariEscapeFactor > 1)
-    {
-        // BUG: safariEscapeFactor can become 0 below. This causes the pokeblock throw glitch.
-        #ifdef BUGFIX
-        if (gBattleStruct->safariEscapeFactor <= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #else
-        if (gBattleStruct->safariEscapeFactor < sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #endif
-            gBattleStruct->safariEscapeFactor = 1;
-        else
-            gBattleStruct->safariEscapeFactor -= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]];
-    }
-
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[2];
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_GoNear(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleStruct->safariCatchFactor += sGoNearCounterToCatchFactor[gBattleStruct->safariGoNearCounter];
-    if (gBattleStruct->safariCatchFactor > 20)
-        gBattleStruct->safariCatchFactor = 20;
-
-    gBattleStruct->safariEscapeFactor += sGoNearCounterToEscapeFactor[gBattleStruct->safariGoNearCounter];
-    if (gBattleStruct->safariEscapeFactor > 20)
-        gBattleStruct->safariEscapeFactor = 20;
-
-    if (gBattleStruct->safariGoNearCounter < 3)
-    {
-        gBattleStruct->safariGoNearCounter++;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CREPT_CLOSER;
-    }
-    else
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_GET_CLOSER;
-    }
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[1];
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_SafariZoneRun(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    PlaySE(SE_FLEE);
-    gCurrentTurnActionNumber = gBattlersCount;
-    gBattleOutcome = B_OUTCOME_RAN;
-}
-
-void HandleAction_WallyBallThrow(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker])
-
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[3];
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-    gActionsByTurnOrder[1] = B_ACTION_FINISHED;
 }
 
 void HandleAction_TryFinish(void)
@@ -3058,8 +2933,6 @@ bool32 HandleWishPerishSongOnTurnEnd(void)
 
 bool32 HandleFaintedMonActions(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-        return FALSE;
     do
     {
         s32 i;
@@ -3988,9 +3861,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
     u32 i, j;
     u32 partner;
     struct Pokemon *mon;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-        return 0;
 
     if (gBattlerAttacker >= gBattlersCount)
         gBattlerAttacker = battler;

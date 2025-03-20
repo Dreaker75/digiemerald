@@ -327,12 +327,6 @@ void SetControllerToOpponent(u32 battler);
 void Controller_PlayerPartnerShowIntroHealthbox(u32 battler); // Also used by the link partner.
 void SetControllerToPlayerPartner(u32 battler);
 
-// safari controller
-void SetControllerToSafari(u32 battler);
-
-// wally controller
-void SetControllerToWally(u32 battler);
-
 // recorded opponent controller
 void SetControllerToRecordedOpponent(u32 battler);
 

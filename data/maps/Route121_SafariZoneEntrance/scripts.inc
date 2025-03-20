@@ -64,16 +64,11 @@ Route121_SafariZoneEntrance_EventScript_TryEnterSafariZone::
 	msgbox Route121_SafariZoneEntrance_Text_ThatWillBe500Please, MSGBOX_DEFAULT
 	removemoney 500
 	updatemoneybox
-	msgbox Route121_SafariZoneEntrance_Text_HereAreYourSafariBalls, MSGBOX_DEFAULT
-	playfanfare MUS_OBTAIN_ITEM
-	message Route121_SafariZoneEntrance_Text_Received30SafariBalls
-	waitfanfare
 	msgbox Route121_SafariZoneEntrance_Text_PleaseEnjoyYourself, MSGBOX_DEFAULT
 	closemessage
 	hidemoneybox
 	applymovement OBJ_EVENT_ID_PLAYER, Route121_SafariZoneEntrance_Movement_EnterSafariZone
 	waitmovement 0
-	special EnterSafariMode
 	setvar VAR_SAFARI_ZONE_STATE, 2
 	clearflag FLAG_GOOD_LUCK_SAFARI_ZONE
 	warp MAP_SAFARI_ZONE_SOUTH, 32, 33

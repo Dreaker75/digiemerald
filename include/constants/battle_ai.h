@@ -51,7 +51,7 @@
 
 // 'other' ai logic flags
 #define AI_FLAG_ROAMING               (1 << 29)
-#define AI_FLAG_SAFARI                (1 << 30)
+#define AI_FLAG_NULL                  (1 << 30) // Old AI_FLAG_SAFARI
 #define AI_FLAG_FIRST_BATTLE          (1 << 31)
 
 #define AI_SCORE_DEFAULT 100 // Default score for all AI moves.

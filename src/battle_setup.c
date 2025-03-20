@@ -5,7 +5,6 @@
 #include "battle_transition.h"
 #include "main.h"
 #include "task.h"
-#include "safari_zone.h"
 #include "script.h"
 #include "event_data.h"
 #include "metatile_behavior.h"
@@ -75,7 +74,6 @@ struct TrainerBattleParameter
 
 // this file's functions
 static void DoBattlePikeWildBattle(void);
-static void DoSafariBattle(void);
 static void DoStandardWildBattle(bool32 isDouble);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
@@ -427,10 +425,7 @@ static void CreateBattleStartTask_Debug(u8 transition, u16 song)
 
 void BattleSetup_StartWildBattle(void)
 {
-    if (GetSafariZoneFlag())
-        DoSafariBattle();
-    else
-        DoStandardWildBattle(FALSE);
+    DoStandardWildBattle(FALSE);
 }
 
 void BattleSetup_StartDoubleWildBattle(void)
@@ -495,16 +490,6 @@ void BattleSetup_StartRoamerBattle(void)
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
     IncrementDailyWildBattles();
     TryUpdateGymLeaderRematchFromWild();
-}
-
-static void DoSafariBattle(void)
-{
-    LockPlayerFieldControls();
-    FreezeObjectEvents();
-    StopPlayerAvatar();
-    gMain.savedCallback = CB2_EndSafariBattle;
-    gBattleTypeFlags = BATTLE_TYPE_SAFARI;
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
 }
 
 static void DoBattlePikeWildBattle(void)

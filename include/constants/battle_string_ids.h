@@ -869,15 +869,6 @@
 // Skips the one used for Battle Palace
 #define NUM_LOAF_STRINGS 4
 
-// gSafariGetNearStringIds
-#define B_MSG_CREPT_CLOSER    0
-#define B_MSG_CANT_GET_CLOSER 1
-
-// gSafariPokeblockResultStringIds
-#define B_MSG_MON_CURIOUS    0
-#define B_MSG_MON_ENTHRALLED 1
-#define B_MSG_MON_IGNORED    2
-
 // gFlashFireStringIds
 #define B_MSG_FLASH_FIRE_BOOST    0
 #define B_MSG_FLASH_FIRE_NO_BOOST 1

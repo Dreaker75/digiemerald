@@ -21,7 +21,6 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "pokemon.h"
-#include "safari_zone.h"
 #include "script.h"
 #include "secret_base.h"
 #include "sound.h"
@@ -400,8 +399,6 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return SkyPillar_Outside_EventScript_ClosedDoor;
     if (MetatileBehavior_IsCableBoxResults1(metatileBehavior) == TRUE)
         return EventScript_CableBoxResults;
-    if (MetatileBehavior_IsPokeblockFeeder(metatileBehavior) == TRUE)
-        return EventScript_PokeBlockFeeder;
     if (MetatileBehavior_IsTrickHousePuzzleDoor(metatileBehavior) == TRUE)
         return Route110_TrickHousePuzzle_EventScript_Door;
     if (MetatileBehavior_IsRegionMap(metatileBehavior) == TRUE)
@@ -623,8 +620,6 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
         }
     }
 
-    if (SafariZoneTakeStep() == TRUE)
-        return TRUE;
     if (CountSSTidalStep(1) == TRUE)
     {
         ScriptContext_SetupScript(SSTidalCorridor_EventScript_ReachedStepCount);

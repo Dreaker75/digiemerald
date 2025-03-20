@@ -4226,7 +4226,6 @@ static bool32 BattleTypeAllowsExp(void)
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
-              | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
               | BATTLE_TYPE_EREADER_TRAINER))
         return FALSE;
@@ -14933,12 +14932,6 @@ static void Cmd_handleballthrow(void)
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_TrainerBallBlock;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
-    {
-        BtlController_EmitBallThrowAnim(gBattlerAttacker, BUFFER_A, BALL_3_SHAKES_SUCCESS);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-        gBattlescriptCurrInstr = BattleScript_WallyBallThrow;
-    }
     else
     {
         u32 odds, i;
@@ -14946,10 +14939,7 @@ static void Cmd_handleballthrow(void)
 
         gLastThrownBall = gLastUsedItem;
         gBallToDisplay = gLastThrownBall;
-        if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-            catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
-        else
-            catchRate = gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate;
+        catchRate = gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate;
 
         if (gSpeciesInfo[gBattleMons[gBattlerTarget].species].isUltraBeast)
         {

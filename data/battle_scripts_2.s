@@ -27,11 +27,6 @@ gBattlescriptsForUsingItem::
 	.4byte BattleScript_ItemIncreaseAllStats         @ EFFECT_ITEM_INCREASE_ALL_STATS
 
 	.align 2
-gBattlescriptsForSafariActions::
-	.4byte BattleScript_ActionWatchesCarefully
-	.4byte BattleScript_ActionGetNear
-	.4byte BattleScript_ActionThrowPokeblock
-	.4byte BattleScript_ActionWallyThrow
 
 BattleScript_ItemEnd:
 	end
@@ -45,7 +40,7 @@ BattleScript_UseItemMessage:
 	printfromtable gTrainerUsedItemStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
-	
+
 BattleScript_ItemRestoreHPRet:
 	bichalfword gMoveResultFlags, MOVE_RESULT_NO_EFFECT
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
@@ -134,18 +129,9 @@ BattleScript_ItemIncreaseAllStats::
 	end
 
 BattleScript_BallThrow::
-	jumpifword CMP_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_WALLY_TUTORIAL, BattleScript_BallThrowByWally
 	printstring STRINGID_PLAYERUSEDITEM
 	handleballthrow
-
-BattleScript_BallThrowByWally::
-	printstring STRINGID_WALLYUSEDITEM
-	handleballthrow
-
-BattleScript_SafariBallThrow::
-	printstring STRINGID_PLAYERUSEDITEM
-	updatestatusicon BS_ATTACKER
-	handleballthrow
+.endif
 
 BattleScript_SuccessBallThrow::
 	setbyte sMON_CAUGHT, TRUE
@@ -178,19 +164,9 @@ BattleScript_SuccessBallThrowEnd::
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
 	finishturn
 
-BattleScript_WallyBallThrow::
-	printstring STRINGID_GOTCHAPKMNCAUGHTWALLY
-	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
-	finishturn
-
 BattleScript_ShakeBallThrow::
 	printfromtable gBallEscapeStringIds
 	waitmessage B_WAIT_TIME_LONG
-	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrowEnd
-	jumpifbyte CMP_NOT_EQUAL, gNumSafariBalls, 0, BattleScript_ShakeBallThrowEnd
-	printstring STRINGID_OUTOFSAFARIBALLS
-	waitmessage B_WAIT_TIME_LONG
-	setbyte gBattleOutcome, B_OUTCOME_NO_SAFARI_BALLS
 BattleScript_ShakeBallThrowEnd::
 	finishaction
 
@@ -206,35 +182,6 @@ BattleScript_RunByUsingItem::
 	playse SE_FLEE
 	setbyte gBattleOutcome, B_OUTCOME_RAN
 	finishturn
-
-BattleScript_ActionWatchesCarefully:
-	printstring STRINGID_PKMNWATCHINGCAREFULLY
-	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_ActionGetNear:
-	printfromtable gSafariGetNearStringIds
-	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_ActionThrowPokeblock:
-	printstring STRINGID_THREWPOKEBLOCKATPKMN
-	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_POKEBLOCK_THROW, NULL
-	printfromtable gSafariPokeblockResultStringIds
-	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_ActionWallyThrow:
-	printstring STRINGID_RETURNMON
-	waitmessage B_WAIT_TIME_LONG
-	returnatktoball
-	waitstate
-	trainerslidein BS_TARGET
-	waitstate
-	printstring STRINGID_YOUTHROWABALLNOWRIGHT
-	waitmessage B_WAIT_TIME_LONG
-	end2
 
 BattleScript_TrainerASlideMsgRet::
 	handletrainerslidemsg BS_SCRIPTING, 0
