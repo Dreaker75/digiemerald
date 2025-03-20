@@ -612,7 +612,7 @@ static void CreateEvolution(u16 evoSpecies)
 
     for (i = MON_DATA_COOL_RIBBON; i < MON_DATA_COOL_RIBBON + CONTEST_CATEGORIES_COUNT; i++)
         SetMonData(&newMon, i, &data);
-    for (i = MON_DATA_CHAMPION_RIBBON; i <= MON_DATA_UNUSED_RIBBONS; i++)
+    for (i = MON_DATA_CHAMPION_RIBBON; i <= MON_DATA_WORLD_RIBBON; i++)
         SetMonData(&newMon, i, &data);
 
     SetMonData(&newMon, MON_DATA_STATUS, &data);
