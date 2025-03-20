@@ -1036,13 +1036,6 @@ gBattleAnims_General::
 	.align 2
 gBattleAnims_Special::
 	.4byte Special_LevelUp                  @ B_ANIM_LVL_UP
-	.4byte Special_SwitchOutPlayerMon       @ B_ANIM_SWITCH_OUT_PLAYER_MON
-	.4byte Special_SwitchOutOpponentMon     @ B_ANIM_SWITCH_OUT_OPPONENT_MON
-	.4byte Special_BallThrow                @ B_ANIM_BALL_THROW
-	.4byte Special_BallThrowWithTrainer     @ B_ANIM_BALL_THROW_WITH_TRAINER
-	.4byte Special_SubstituteToMon          @ B_ANIM_SUBSTITUTE_TO_MON
-	.4byte Special_MonToSubstitute          @ B_ANIM_MON_TO_SUBSTITUTE
-	.4byte Special_CriticalCaptureBallThrow @ B_ANIM_CRITICAL_CAPTURE_THROW
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 4 @@@@@@@@@@@@@@@@@@@@@@@
 Move_ROOST:
@@ -17424,7 +17417,7 @@ Move_LAST_RESPECTS::
 	restorebg
 	waitbgfadein
 	end
-	
+
 Move_TIDY_UP::
 	loadspritegfx ANIM_TAG_PINK_CLOUD
 	monbg ANIM_ATTACKER
@@ -17445,7 +17438,7 @@ Move_TIDY_UP::
 	clearmonbg ANIM_ATTACKER
 	blendoff
 	end
-	
+
 Move_KOWTOW_CLEAVE::
 	loadspritegfx ANIM_TAG_SLASH
 	loadspritegfx ANIM_TAG_CROSS_IMPACT
@@ -17739,7 +17732,7 @@ Move_HYDRO_STEAM::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 3, 9, 0, RGB_RED
 	waitforvisualfinish
 	end
-	
+
 Move_POUNCE::
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_TARGET
@@ -28626,67 +28619,6 @@ Special_LevelUp:
 	waitforvisualfinish
 	createvisualtask AnimTask_FreeHealthboxPalsForLevelUp, 2
 	end
-
-Special_SwitchOutPlayerMon:
-	createvisualtask AnimTask_SwitchOutBallEffect, 2
-	delay 10
-	createvisualtask AnimTask_SwitchOutShrinkMon, 2
-	end
-
-Special_SwitchOutOpponentMon:
-	createvisualtask AnimTask_SwitchOutBallEffect, 2
-	delay 10
-	createvisualtask AnimTask_SwitchOutShrinkMon, 2
-	end
-
-Special_BallThrow:
-	createvisualtask AnimTask_LoadBallGfx, 2
-	delay 0
-	playsewithpan SE_BALL_THROW, 0
-	createvisualtask AnimTask_ThrowBall, 2
-	createvisualtask AnimTask_IsBallBlockedByTrainer, 2
-	jumpreteq -1, BallThrowTrainerBlock
-BallThrowEnd:
-	waitforvisualfinish
-	createvisualtask AnimTask_FreeBallGfx, 2
-	end
-BallThrowTrainerBlock:
-	loadspritegfx ANIM_TAG_IMPACT
-	delay 25
-	monbg ANIM_DEF_PARTNER
-	setalpha 12, 8
-	delay 0
-	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
-	createsprite gBasicHitSplatSpriteTemplate, ANIM_TARGET, 2, -4, -20, ANIM_TARGET, 2
-	waitforvisualfinish
-	clearmonbg ANIM_DEF_PARTNER
-	blendoff
-	goto BallThrowEnd
-
-Special_BallThrowWithTrainer:
-	createvisualtask AnimTask_LoadBallGfx, 2
-	delay 0
-	createvisualtask AnimTask_ThrowBall_StandingTrainer, 2
-	waitforvisualfinish
-	createvisualtask AnimTask_FreeBallGfx, 2
-	end
-
-Special_SubstituteToMon:
-	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, TRUE
-	end
-
-Special_MonToSubstitute:
-	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, FALSE
-	end
-
-Special_CriticalCaptureBallThrow:
-	createvisualtask AnimTask_LoadBallGfx, 2
-	delay 0
-	playsewithpan SE_FALL, 0
-	createvisualtask AnimTask_ThrowBall, 2
-	createvisualtask AnimTask_IsBallBlockedByTrainer, 2
-	jumpreteq -1, BallThrowTrainerBlock
-	goto BallThrowEnd
 
 @@@@@@@@@@ Z MOVES @@@@@@@@@@
 Move_BREAKNECK_BLITZ::

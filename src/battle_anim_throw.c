@@ -884,41 +884,6 @@ void AnimTask_SwitchOutShrinkMon(u8 taskId)
     }
 }
 
-void AnimTask_SwitchOutBallEffect(u8 taskId)
-{
-    u8 spriteId;
-    u16 ball;
-    u8 ballId;
-    u8 x, y;
-    u8 priority, subpriority;
-    u32 selectedPalettes;
-
-    spriteId = gBattlerSpriteIds[gBattleAnimAttacker];
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
-        ball = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
-    else
-        ball = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattleAnimAttacker]], MON_DATA_POKEBALL);
-
-    ballId = ItemIdToBallId(ball);
-    switch (gTasks[taskId].data[0])
-    {
-    case 0:
-        x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-        y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
-        priority = gSprites[spriteId].oam.priority;
-        subpriority = gSprites[spriteId].subpriority;
-        gTasks[taskId].data[10] = AnimateBallOpenParticles(x, y + 32, priority, subpriority, ballId);
-        selectedPalettes = GetBattlePalettesMask(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        gTasks[taskId].data[11] = LaunchBallFadeMonTask(FALSE, gBattleAnimAttacker, selectedPalettes, ballId);
-        gTasks[taskId].data[0]++;
-        break;
-    case 1:
-        if (!gTasks[gTasks[taskId].data[10]].isActive && !gTasks[gTasks[taskId].data[11]].isActive)
-            DestroyAnimVisualTask(taskId);
-        break;
-    }
-}
-
 void AnimTask_LoadBallGfx(u8 taskId)
 {
     u8 ballId = ItemIdToBallId(gLastUsedItem);
