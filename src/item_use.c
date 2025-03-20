@@ -1204,25 +1204,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_THROW_BALL:
-        switch (GetBallThrowableState())
-        {
-        case BALL_THROW_UNABLE_TWO_MONS:
-            failStr = sText_CantThrowPokeBall_TwoMons;
-            cannotUse = TRUE;
-            break;
-        case BALL_THROW_UNABLE_NO_ROOM:
-            failStr = gText_BoxFull;
-            cannotUse = TRUE;
-            break;
-        case BALL_THROW_UNABLE_SEMI_INVULNERABLE:
-            failStr = sText_CantThrowPokeBall_SemiInvulnerable;
-            cannotUse = TRUE;
-            break;
-        case BALL_THROW_UNABLE_DISABLED_FLAG:
-            failStr = sText_CantThrowPokeBall_Disabled;
-            cannotUse = TRUE;
-            break;
-        }
+        cannotUse = TRUE;
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
         for (i = STAT_ATK; i < NUM_STATS; i++)
@@ -1291,8 +1273,6 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     else
     {
         PlaySE(SE_SELECT);
-        if (!(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (ItemId_GetBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
-            RemoveUsedItem();
         ScheduleBgCopyTilemapToVram(2);
         if (!InBattlePyramid())
             gTasks[taskId].func = Task_FadeAndCloseBagMenu;

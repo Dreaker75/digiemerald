@@ -312,7 +312,6 @@ static void SpriteCB_Pokemon(struct Sprite *);
 static void StopPokemonAnimations(void);
 static void CreateMonMarkingsSprite(struct Pokemon *);
 static void RemoveAndCreateMonMarkingsSprite(struct Pokemon *);
-static void CreateCaughtBallSprite(struct Pokemon *);
 static void CreateSetStatusSprite(void);
 static void CreateMoveSelectorSprites(u8);
 static void SpriteCB_MoveSelector(struct Sprite *);
@@ -1319,7 +1318,6 @@ static bool8 LoadGraphics(void)
         gMain.state++;
         break;
     case 19:
-        CreateCaughtBallSprite(&sMonSummaryScreen->currentMon);
         gMain.state++;
         break;
     case 20:
@@ -1723,7 +1721,6 @@ static void Task_ChangeSummaryMon(u8 taskId)
         RemoveAndCreateMonMarkingsSprite(&sMonSummaryScreen->currentMon);
         break;
     case 6:
-        CreateCaughtBallSprite(&sMonSummaryScreen->currentMon);
         break;
     case 7:
         if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
@@ -4145,16 +4142,6 @@ static void RemoveAndCreateMonMarkingsSprite(struct Pokemon *mon)
     DestroySprite(sMonSummaryScreen->markingsSprite);
     FreeSpriteTilesByTag(TAG_MON_MARKINGS);
     CreateMonMarkingsSprite(mon);
-}
-
-static void CreateCaughtBallSprite(struct Pokemon *mon)
-{
-    u8 ball = ItemIdToBallId(GetMonData(mon, MON_DATA_POKEBALL));
-
-    LoadBallGfx(ball);
-    sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL] = CreateSprite(&gBallSpriteTemplates[ball], 16, 136, 0);
-    gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL]].callback = SpriteCallbackDummy;
-    gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_BALL]].oam.priority = 3;
 }
 
 static void CreateSetStatusSprite(void)

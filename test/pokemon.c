@@ -204,7 +204,6 @@ TEST("givemon [all]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), ITEM_MASTER_BALL);
     EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
     EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), gSpeciesInfo[SPECIES_WOBBUFFET].abilities[2]);
     EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);
@@ -267,7 +266,6 @@ TEST("givemon [vars]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), ITEM_MASTER_BALL);
     EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
     EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), gSpeciesInfo[SPECIES_WOBBUFFET].abilities[2]);
     EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);

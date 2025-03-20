@@ -100,7 +100,6 @@ enum
 
 extern const struct TypePower gNaturalGiftTable[];
 
-void HandleAction_ThrowBall(void);
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move);
 void HandleAction_UseMove(void);
 void HandleAction_Switch(void);

@@ -1906,14 +1906,6 @@ const u16 gFutureMoveUsedStringIds[] =
     [B_MSG_DOOM_DESIRE]  = STRINGID_PKMNCHOSEXASDESTINY
 };
 
-const u16 gBallEscapeStringIds[] =
-{
-    [BALL_NO_SHAKES]     = STRINGID_PKMNBROKEFREE,
-    [BALL_1_SHAKE]       = STRINGID_ITAPPEAREDCAUGHT,
-    [BALL_2_SHAKES]      = STRINGID_AARGHALMOSTHADIT,
-    [BALL_3_SHAKES_FAIL] = STRINGID_SHOOTSOCLOSE
-};
-
 // Overworld weathers that don't have an associated battle weather default to "It is raining."
 const u16 gWeatherStartsStringIds[] =
 {

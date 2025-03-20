@@ -1707,10 +1707,6 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         dst[0] = GetMonData(&party[monId], MON_DATA_MET_GAME);
         size = 1;
         break;
-    case REQUEST_POKEBALL_BATTLE:
-        dst[0] = GetMonData(&party[monId], MON_DATA_POKEBALL);
-        size = 1;
-        break;
     case REQUEST_ALL_IVS_BATTLE:
         dst[0] = GetMonData(&party[monId], MON_DATA_HP_IV);
         dst[1] = GetMonData(&party[monId], MON_DATA_ATK_IV);
@@ -1978,9 +1974,6 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
         break;
     case REQUEST_MET_GAME_BATTLE:
         SetMonData(&party[monId], MON_DATA_MET_GAME, &gBattleResources->bufferA[battler][3]);
-        break;
-    case REQUEST_POKEBALL_BATTLE:
-        SetMonData(&party[monId], MON_DATA_POKEBALL, &gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_ALL_IVS_BATTLE:
         SetMonData(&party[monId], MON_DATA_HP_IV, &gBattleResources->bufferA[battler][3]);
@@ -2252,12 +2245,6 @@ void Controller_WaitForHealthBar(u32 battler)
             HandleLowHpMusicChange(&gPlayerParty[gBattlerPartyIndexes[battler]], battler);
         BattleControllerComplete(battler);
     }
-}
-
-static void Controller_WaitForBallThrow(u32 battler)
-{
-    if (!gDoingBattleAnim || !gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive)
-        BattleControllerComplete(battler);
 }
 
 static void Controller_WaitForBattleAnimation(u32 battler)
@@ -2602,28 +2589,6 @@ void BtlController_HandleFaintAnimation(u32 battler)
 
 #undef sSpeedX
 #undef sSpeedY
-
-static void HandleBallThrow(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture)
-{
-    gDoingBattleAnim = TRUE;
-    if (allowCriticalCapture && IsCriticalCapture())
-        animId = B_ANIM_CRITICAL_CAPTURE_THROW;
-    InitAndLaunchSpecialAnimation(battler, battler, target, animId);
-
-    gBattlerControllerFuncs[battler] = Controller_WaitForBallThrow;
-}
-
-void BtlController_HandleSuccessBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture)
-{
-    gBattleSpritesDataPtr->animationData->ballThrowCaseId = BALL_3_SHAKES_SUCCESS;
-    HandleBallThrow(battler, target, animId, allowCriticalCapture);
-}
-
-void BtlController_HandleBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture)
-{
-    gBattleSpritesDataPtr->animationData->ballThrowCaseId = gBattleResources->bufferA[battler][1];
-    HandleBallThrow(battler, target, animId, allowCriticalCapture);
-}
 
 void BtlController_HandleMoveAnimation(u32 battler, bool32 updateTvData)
 {

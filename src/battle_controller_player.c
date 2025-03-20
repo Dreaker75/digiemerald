@@ -48,7 +48,6 @@ static void PlayerHandleDrawTrainerPic(u32 battler);
 static void PlayerHandleTrainerSlide(u32 battler);
 static void PlayerHandleTrainerSlideBack(u32 battler);
 static void PlayerHandlePaletteFade(u32 battler);
-static void PlayerHandleSuccessBallThrowAnim(u32 battler);
 static void PlayerHandlePause(u32 battler);
 static void PlayerHandleMoveAnimation(u32 battler);
 static void PlayerHandlePrintString(u32 battler);
@@ -110,8 +109,6 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_TRAINERSLIDEBACK]         = PlayerHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = PlayerHandlePaletteFade,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = PlayerHandleSuccessBallThrowAnim,
-    [CONTROLLER_BALLTHROWANIM]            = PlayerHandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = PlayerHandlePause,
     [CONTROLLER_MOVEANIMATION]            = PlayerHandleMoveAnimation,
     [CONTROLLER_PRINTSTRING]              = PlayerHandlePrintString,
@@ -202,50 +199,6 @@ static void CompleteOnBattlerSpritePosX_0(u32 battler)
         PlayerBufferExecCompleted(battler);
 }
 
-static u16 GetPrevBall(u16 ballId)
-{
-    u16 ballPrev;
-    s32 i, j;
-    CompactItemsInBagPocket(&gBagPockets[BALLS_POCKET]);
-    for (i = 0; i < gBagPockets[BALLS_POCKET].capacity; i++)
-    {
-        if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i].itemId)
-        {
-            if (i <= 0)
-            {
-                for (j = gBagPockets[BALLS_POCKET].capacity - 1; j >= 0; j--)
-                {
-                    ballPrev = gBagPockets[BALLS_POCKET].itemSlots[j].itemId;
-                    if (ballPrev != ITEM_NONE)
-                        return ballPrev;
-                }
-            }
-            i--;
-            break;
-        }
-    }
-    return gBagPockets[BALLS_POCKET].itemSlots[i].itemId;
-}
-
-static u32 GetNextBall(u32 ballId)
-{
-    u32 ballNext = ITEM_NONE;
-    s32 i;
-    CompactItemsInBagPocket(&gBagPockets[BALLS_POCKET]);
-    for (i = 1; i < gBagPockets[BALLS_POCKET].capacity; i++)
-    {
-        if (ballId == gBagPockets[BALLS_POCKET].itemSlots[i-1].itemId)
-        {
-            ballNext = gBagPockets[BALLS_POCKET].itemSlots[i].itemId;
-            break;
-        }
-    }
-    if (ballNext == ITEM_NONE)
-        return gBagPockets[BALLS_POCKET].itemSlots[0].itemId; // Zeroth slot
-    else
-        return ballNext;
-}
-
 static void HandleInputChooseAction(u32 battler)
 {
     u16 itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
@@ -258,66 +211,9 @@ static void HandleInputChooseAction(u32 battler)
     else
         gPlayerDpadHoldFrames = 0;
 
-#if B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE
-    if (!gLastUsedBallMenuPresent)
-    {
-        sAckBallUseBtn = FALSE;
-    }
-    else if (JOY_NEW(B_LAST_USED_BALL_BUTTON))
-    {
-        sAckBallUseBtn = TRUE;
-        sBallSwapped = FALSE;
-        ArrowsChangeColorLastBallCycle(TRUE);
-    }
-    if (sAckBallUseBtn)
-    {
-        if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && (JOY_NEW(DPAD_DOWN) || JOY_NEW(DPAD_RIGHT)))
-        {
-            bool8 sameBall = FALSE;
-            u16 nextBall = GetNextBall(gBallToDisplay);
-            sBallSwapped = TRUE;
-            if (gBallToDisplay == nextBall)
-                sameBall = TRUE;
-            else
-                gBallToDisplay = nextBall;
-            SwapBallToDisplay(sameBall);
-            PlaySE(SE_SELECT);
-        }
-        else if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && (JOY_NEW(DPAD_UP) || JOY_NEW(DPAD_LEFT)))
-        {
-            bool8 sameBall = FALSE;
-            u16 prevBall = GetPrevBall(gBallToDisplay);
-            sBallSwapped = TRUE;
-            if (gBallToDisplay == prevBall)
-                sameBall = TRUE;
-            else
-                gBallToDisplay = prevBall;
-            SwapBallToDisplay(sameBall);
-            PlaySE(SE_SELECT);
-        }
-        else if (JOY_NEW(B_BUTTON) || (!JOY_HELD(B_LAST_USED_BALL_BUTTON) && sBallSwapped))
-        {
-            sAckBallUseBtn = FALSE;
-            sBallSwapped = FALSE;
-            ArrowsChangeColorLastBallCycle(FALSE);
-        }
-        else if (!JOY_HELD(B_LAST_USED_BALL_BUTTON) && CanThrowLastUsedBall())
-        {
-            sAckBallUseBtn = FALSE;
-            PlaySE(SE_SELECT);
-            ArrowsChangeColorLastBallCycle(FALSE);
-            TryHideLastUsedBall();
-            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_THROW_BALL, 0);
-            PlayerBufferExecCompleted(battler);
-        }
-        return;
-    }
-#endif
-
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        TryHideLastUsedBall();
 
         switch (gActionSelectionCursor[battler])
         {
@@ -414,15 +310,6 @@ static void HandleInputChooseAction(u32 battler)
         PlayerBufferExecCompleted(battler);
     }
 #endif
-#if B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == FALSE
-    else if (JOY_NEW(B_LAST_USED_BALL_BUTTON) && CanThrowLastUsedBall())
-    {
-        PlaySE(SE_SELECT);
-        TryHideLastUsedBall();
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_THROW_BALL, 0);
-        PlayerBufferExecCompleted(battler);
-    }
-#endif
 }
 
 static void HandleInputChooseTarget(u32 battler)
@@ -457,7 +344,6 @@ static void HandleInputChooseTarget(u32 battler)
         else
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
-        TryHideLastUsedBall();
         HideTriggerSprites();
         PlayerBufferExecCompleted(battler);
     }
@@ -651,7 +537,6 @@ static void HandleInputShowTargets(u32 battler)
         else
             BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideTriggerSprites();
-        TryHideLastUsedBall();
         PlayerBufferExecCompleted(battler);
     }
     else if (JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)
@@ -775,7 +660,6 @@ static void HandleInputChooseMove(u32 battler)
             else
                 BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
             HideTriggerSprites();
-            TryHideLastUsedBall();
             PlayerBufferExecCompleted(battler);
             break;
         case 1:
@@ -1927,16 +1811,6 @@ static void PlayerHandlePaletteFade(u32 battler)
     PlayerBufferExecCompleted(battler);
 }
 
-static void PlayerHandleSuccessBallThrowAnim(u32 battler)
-{
-    BtlController_HandleSuccessBallThrowAnim(battler, gBattlerTarget, B_ANIM_BALL_THROW, TRUE);
-}
-
-void PlayerHandleBallThrowAnim(u32 battler)
-{
-    BtlController_HandleBallThrowAnim(battler, gBattlerTarget, B_ANIM_BALL_THROW, TRUE);
-}
-
 static void PlayerHandlePause(u32 battler)
 {
     u8 timer = gBattleResources->bufferA[battler][1];
@@ -1999,7 +1873,6 @@ static void PlayerHandleChooseAction(u32 battler)
     for (i = 0; i < 4; i++)
         ActionSelectionDestroyCursorAt(i);
 
-    TryRestoreLastUsedBall();
     ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
     PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
     BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);

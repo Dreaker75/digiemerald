@@ -365,11 +365,6 @@ u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 natu
     }
     SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
 
-    // ball
-    if (ball >= POKEBALL_COUNT)
-        ball = ITEM_POKE_BALL;
-    SetMonData(&mon, MON_DATA_POKEBALL, &ball);
-
     // held item
     SetMonData(&mon, MON_DATA_HELD_ITEM, &item);
 
@@ -400,7 +395,7 @@ u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 natu
     }
 
     // set pokédex flags
-    nationalDexNum = SpeciesToNationalPokedexNum(species); 
+    nationalDexNum = SpeciesToNationalPokedexNum(species);
     switch (sentToPc)
     {
     case MON_GIVEN_TO_PARTY:
@@ -514,7 +509,7 @@ void Script_SetStatus1(struct ScriptContext *ctx)
         }
     }
     else
-    {        
+    {
         SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
     }
 }

@@ -331,8 +331,6 @@ static const u16 sFavorLadyAcceptedItems_Roundish[] =
     ITEM_GREPA_BERRY,
     ITEM_MAGOST_BERRY,
     ITEM_WATMEL_BERRY,
-    ITEM_POKE_BALL,
-    ITEM_ULTRA_BALL,
     ITEM_NONE
 };
 

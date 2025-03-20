@@ -21,7 +21,6 @@ gBattlescriptsForUsingItem::
 	.4byte BattleScript_ItemSetMist                  @ EFFECT_ITEM_SET_MIST
 	.4byte BattleScript_ItemSetFocusEnergy           @ EFFECT_ITEM_SET_FOCUS_ENERGY
 	.4byte BattleScript_RunByUsingItem               @ EFFECT_ITEM_ESCAPE
-	.4byte BattleScript_BallThrow                    @ EFFECT_ITEM_THROW_BALL
 	.4byte BattleScript_ItemRestoreHP                @ EFFECT_ITEM_REVIVE
 	.4byte BattleScript_ItemRestorePP                @ EFFECT_ITEM_RESTORE_PP
 	.4byte BattleScript_ItemIncreaseAllStats         @ EFFECT_ITEM_INCREASE_ALL_STATS
@@ -127,48 +126,6 @@ BattleScript_ItemIncreaseAllStats::
 	call BattleScript_UseItemMessage
 	call BattleScript_AllStatsUp
 	end
-
-BattleScript_BallThrow::
-	printstring STRINGID_PLAYERUSEDITEM
-	handleballthrow
-.endif
-
-BattleScript_SuccessBallThrow::
-	setbyte sMON_CAUGHT, TRUE
-	incrementgamestat GAME_STAT_POKEMON_CAPTURES
-BattleScript_PrintCaughtMonInfo::
-	printstring STRINGID_GOTCHAPKMNCAUGHTPLAYER
-	jumpifbyte CMP_NOT_EQUAL, sEXP_CATCH, TRUE, BattleScript_TryPrintCaughtMonInfo
-	setbyte sGIVEEXP_STATE, 0
-	getexp BS_TARGET
-	sethword gBattle_BG2_X, 0
-BattleScript_TryPrintCaughtMonInfo:
-	jumpifbattletype BATTLE_TYPE_RECORDED, BattleScript_GiveCaughtMonEnd
-	trysetcaughtmondexflags BattleScript_TryNicknameCaughtMon
-	printstring STRINGID_PKMNDATAADDEDTODEX
-	waitstate
-	setbyte gBattleCommunication, 0
-	displaydexinfo
-BattleScript_TryNicknameCaughtMon::
-	printstring STRINGID_GIVENICKNAMECAPTURED
-	waitstate
-	setbyte gBattleCommunication, 0
-	trygivecaughtmonnick BattleScript_GiveCaughtMonEnd
-	givecaughtmon
-	printfromtable gCaughtMonStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_SuccessBallThrowEnd
-BattleScript_GiveCaughtMonEnd::
-	givecaughtmon
-BattleScript_SuccessBallThrowEnd::
-	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
-	finishturn
-
-BattleScript_ShakeBallThrow::
-	printfromtable gBallEscapeStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_ShakeBallThrowEnd::
-	finishaction
 
 BattleScript_TrainerBallBlock::
 	waitmessage B_WAIT_TIME_LONG
