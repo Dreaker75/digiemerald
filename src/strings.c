@@ -269,7 +269,6 @@ const u8 *const gBagMenu_ReturnToStrings[] =
     [ITEMMENULOCATION_FAVOR_LADY]          = gText_TheField,
     [ITEMMENULOCATION_QUIZ_LADY]           = gText_TheField,
     [ITEMMENULOCATION_APPRENTICE]          = gText_TheField,
-    [ITEMMENULOCATION_WALLY]               = gText_TheBattle,
     [ITEMMENULOCATION_PCBOX]               = gText_ThePC,
     [ITEMMENULOCATION_BERRY_TREE_MULCH]    = gText_TheField,
 };
