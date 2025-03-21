@@ -71,8 +71,8 @@ void SetBagItemsPointers(void)
     gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_KeyItems;
     gBagPockets[KEYITEMS_POCKET].capacity = BAG_KEYITEMS_COUNT;
 
-    gBagPockets[BALLS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
-    gBagPockets[BALLS_POCKET].capacity = BAG_POKEBALLS_COUNT;
+    gBagPockets[XANTIBODIES_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_XAntibodies;
+    gBagPockets[XANTIBODIES_POCKET].capacity = BAG_XANTIBODIES_COUNT;
 
     gBagPockets[TMHM_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_TMHM;
     gBagPockets[TMHM_POCKET].capacity = BAG_TMHM_COUNT;

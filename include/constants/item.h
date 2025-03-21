@@ -10,7 +10,7 @@
 #define POCKET_KEY_ITEMS   5
 
 #define ITEMS_POCKET       0
-#define BALLS_POCKET       1
+#define XANTIBODIES_POCKET   1
 #define TMHM_POCKET        2
 #define BERRIES_POCKET     3
 #define KEYITEMS_POCKET    4
