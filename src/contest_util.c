@@ -879,8 +879,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
     int i;
     u8 spriteId;
     u16 species;
-    bool8 isShiny;
-    u32 personality;
+    u8 form, gender;
 
     switch (gTasks[taskId].tState)
     {
@@ -890,14 +889,15 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
 
         GET_CONTEST_WINNER_ID(i);
         species = gContestMons[i].species;
-        personality = gContestMons[i].personality;
-        isShiny = gContestMons[i].isShiny;
+        gender = gContestMons[i].gender;
+        form = gContestMons[i].form;
         HandleLoadSpecialPokePic(TRUE,
                                 gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT],
                                 species,
-                                personality);
+                                form,
+                                gender);
 
-        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndGender(species, gender), species);
         SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_OPPONENT_LEFT);
         gMultiuseSpriteTemplate.paletteTag = species;
         spriteId = CreateSprite(&gMultiuseSpriteTemplate, DISPLAY_WIDTH + 32, DISPLAY_HEIGHT / 2, 10);
@@ -1090,12 +1090,12 @@ static void Task_FlashStarsAndHearts(u8 taskId)
         sContestResults->data->pointsFlashing = TRUE;
 }
 
-static void LoadContestMonIcon(u16 species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
+static void LoadContestMonIcon(u16 species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u8 form, u8 gender)
 {
     const u8 *iconPtr;
     u16 var0, var1;
 
-    iconPtr = GetMonIconPtr(species, personality);
+    iconPtr = GetMonIconPtr(species, form, gender);
     iconPtr += srcOffset * 0x200 + 0x80;
     if (useDmaNow)
     {
@@ -1115,7 +1115,7 @@ static void LoadAllContestMonIcons(u8 srcOffset, bool8 useDmaNow)
     int i;
 
     for (i = 0; i < CONTESTANT_COUNT; i++)
-        LoadContestMonIcon(gContestMons[i].species, i, srcOffset, useDmaNow, gContestMons[i].personality);
+        LoadContestMonIcon(gContestMons[i].species, i, srcOffset, useDmaNow, gContestMons[i].form, gContestMons[i].gender);
 }
 
 static void LoadAllContestMonIconPalettes(void)
@@ -1661,7 +1661,7 @@ static void Task_BounceMonIconInBox(u8 taskId)
     if (gTasks[taskId].tTimer++ == gTasks[taskId].tNumFrames)
     {
         gTasks[taskId].tTimer = 0;
-        LoadContestMonIcon(gTasks[taskId].tSpecies, monIndex, gTasks[taskId].tBounced, FALSE, gContestMons[monIndex].personality);
+        LoadContestMonIcon(gTasks[taskId].tSpecies, monIndex, gTasks[taskId].tBounced, FALSE, gContestMons[monIndex].form, gContestMons[monIndex].gender);
         gTasks[taskId].tBounced ^= 1;
     }
 }
@@ -2552,12 +2552,11 @@ bool8 IsContestDebugActive(void)
 
 void ShowContestEntryMonPic(void)
 {
-    u32 personality;
+    u8 form, gender;
     u16 species;
     u8 spriteId;
     u8 taskId;
     u8 left, top;
-    bool32 isShiny;
 
     if (FindTaskIdByFunc(Task_ShowContestEntryMonPic) == TASK_NONE)
     {
@@ -2565,14 +2564,14 @@ void ShowContestEntryMonPic(void)
         left = 10;
         top = 3;
         species = gContestMons[gSpecialVar_0x8006].species;
-        personality = gContestMons[gSpecialVar_0x8006].personality;
-        isShiny = gContestMons[gSpecialVar_0x8006].isShiny;
+        form = gContestMons[gSpecialVar_0x8006].form;
+        gender = gContestMons[gSpecialVar_0x8006].gender;
         taskId = CreateTask(Task_ShowContestEntryMonPic, 0x50);
         gTasks[taskId].data[0] = 0;
         gTasks[taskId].data[1] = species;
-        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], species, personality);
+        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], species, form, gender);
 
-        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndGender(species, gender), species);
         SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_OPPONENT_LEFT);
         gMultiuseSpriteTemplate.paletteTag = species;
         spriteId = CreateSprite(&gMultiuseSpriteTemplate, (left + 1) * 8 + 32, (top * 8) + 40, 0);

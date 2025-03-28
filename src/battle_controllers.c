@@ -79,7 +79,12 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
         ZeroEnemyPartyMons();
-        CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  OT_ID_PLAYER_ID, 0);
         i = 0;
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, &i);
     }
@@ -1584,7 +1589,8 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         battleMon.speedIV = GetMonData(&party[monId], MON_DATA_SPEED_IV);
         battleMon.spAttackIV = GetMonData(&party[monId], MON_DATA_SPATK_IV);
         battleMon.spDefenseIV = GetMonData(&party[monId], MON_DATA_SPDEF_IV);
-        battleMon.personality = GetMonData(&party[monId], MON_DATA_PERSONALITY);
+        battleMon.form = GetMonData(&party[monId], MON_DATA_FORM);
+        battleMon.gender = GetMonData(&party[monId], MON_DATA_GENDER);
         battleMon.status1 = GetMonData(&party[monId], MON_DATA_STATUS);
         battleMon.level = GetMonData(&party[monId], MON_DATA_LEVEL);
         battleMon.hp = GetMonData(&party[monId], MON_DATA_HP);
@@ -1740,13 +1746,13 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         dst[0] = GetMonData(&party[monId], MON_DATA_SPDEF_IV);
         size = 1;
         break;
-    case REQUEST_PERSONALITY_BATTLE:
-        data32 = GetMonData(&party[monId], MON_DATA_PERSONALITY);
-        dst[0] = (data32 & 0x000000FF);
-        dst[1] = (data32 & 0x0000FF00) >> 8;
-        dst[2] = (data32 & 0x00FF0000) >> 16;
-        dst[3] = (data32 & 0xFF000000) >> 24;
-        size = 4;
+    case REQUEST_FORM_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_FORM);
+        size = 1;
+        break;
+    case REQUEST_GENDER_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_GENDER);
+        size = 1;
         break;
     case REQUEST_CHECKSUM_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_CHECKSUM);
@@ -1867,7 +1873,7 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
     {
     case REQUEST_ALL_BATTLE:
         {
-            u8 iv;
+            u8 bitFields;
 
             SetMonData(&party[monId], MON_DATA_SPECIES, &battlePokemon->species);
             SetMonData(&party[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
@@ -1879,19 +1885,22 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
             SetMonData(&party[monId], MON_DATA_PP_BONUSES, &battlePokemon->ppBonuses);
             SetMonData(&party[monId], MON_DATA_FRIENDSHIP, &battlePokemon->friendship);
             SetMonData(&party[monId], MON_DATA_EXP, &battlePokemon->experience);
-            iv = battlePokemon->hpIV;
-            SetMonData(&party[monId], MON_DATA_HP_IV, &iv);
-            iv = battlePokemon->attackIV;
-            SetMonData(&party[monId], MON_DATA_ATK_IV, &iv);
-            iv = battlePokemon->defenseIV;
-            SetMonData(&party[monId], MON_DATA_DEF_IV, &iv);
-            iv = battlePokemon->speedIV;
-            SetMonData(&party[monId], MON_DATA_SPEED_IV, &iv);
-            iv = battlePokemon->spAttackIV;
-            SetMonData(&party[monId], MON_DATA_SPATK_IV, &iv);
-            iv = battlePokemon->spDefenseIV;
-            SetMonData(&party[monId], MON_DATA_SPDEF_IV, &iv);
-            SetMonData(&party[monId], MON_DATA_PERSONALITY, &battlePokemon->personality);
+            bitFields = battlePokemon->hpIV;
+            SetMonData(&party[monId], MON_DATA_HP_IV, &bitFields);
+            bitFields = battlePokemon->attackIV;
+            SetMonData(&party[monId], MON_DATA_ATK_IV, &bitFields);
+            bitFields = battlePokemon->defenseIV;
+            SetMonData(&party[monId], MON_DATA_DEF_IV, &bitFields);
+            bitFields = battlePokemon->speedIV;
+            SetMonData(&party[monId], MON_DATA_SPEED_IV, &bitFields);
+            bitFields = battlePokemon->spAttackIV;
+            SetMonData(&party[monId], MON_DATA_SPATK_IV, &bitFields);
+            bitFields = battlePokemon->spDefenseIV;
+            SetMonData(&party[monId], MON_DATA_SPDEF_IV, &bitFields);
+            bitFields = battlePokemon->form;
+            SetMonData(&party[monId], MON_DATA_FORM, &bitFields);
+            bitFields = battlePokemon->gender;
+            SetMonData(&party[monId], MON_DATA_GENDER, &bitFields);
             SetMonData(&party[monId], MON_DATA_STATUS, &battlePokemon->status1);
             SetMonData(&party[monId], MON_DATA_LEVEL, &battlePokemon->level);
             SetMonData(&party[monId], MON_DATA_HP, &battlePokemon->hp);
@@ -2001,8 +2010,11 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
     case REQUEST_SPDEF_IV_BATTLE:
         SetMonData(&party[monId], MON_DATA_SPDEF_IV, &gBattleResources->bufferA[battler][3]);
         break;
-    case REQUEST_PERSONALITY_BATTLE:
-        SetMonData(&party[monId], MON_DATA_PERSONALITY, &gBattleResources->bufferA[battler][3]);
+    case REQUEST_FORM_BATTLE:
+        SetMonData(&party[monId], MON_DATA_FORM, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_GENDER_BATTLE:
+        SetMonData(&party[monId], MON_DATA_GENDER, &gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_CHECKSUM_BATTLE:
         SetMonData(&party[monId], MON_DATA_CHECKSUM, &gBattleResources->bufferA[battler][3]);
@@ -2602,8 +2614,8 @@ void BtlController_HandleMoveAnimation(u32 battler, bool32 updateTvData)
         gAnimFriendship = gBattleResources->bufferA[battler][10];
         gWeatherMoveAnim = gBattleResources->bufferA[battler][12] | (gBattleResources->bufferA[battler][13] << 8);
         gAnimDisableStructPtr = (struct DisableStruct *)&gBattleResources->bufferA[battler][16];
-        gTransformedPersonalities[battler] = gAnimDisableStructPtr->transformedMonPersonality;
-        gTransformedShininess[battler] = gAnimDisableStructPtr->transformedMonShininess;
+        gTransformedForm[battler] = gAnimDisableStructPtr->transformedMonForm;
+        gTransformedGender[battler] = gAnimDisableStructPtr->transformedMonGender;
         gBattleSpritesDataPtr->healthBoxesData[battler].animationState = 0;
         gBattlerControllerFuncs[battler] = Controller_DoMoveAnimation;
         if (updateTvData)

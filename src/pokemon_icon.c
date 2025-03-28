@@ -135,13 +135,13 @@ static const u16 sSpriteImageSizes[3][4] =
     },
 };
 
-u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality)
+u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 forms, u8 gender)
 {
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
     {
         .oam = &sMonIconOamData,
-        .image = GetMonIconPtr(species, personality),
+        .image = GetMonIconPtr(species, forms, gender),
         .anims = sMonIconAnims,
         .affineAnims = sMonIconAffineAnims,
         .callback = callback,
@@ -151,7 +151,7 @@ u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u
 
     if (species > NUM_SPECIES)
         iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG;
-    else if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    else if (gSpeciesInfo[species].iconSpriteFemale != NULL && gender == FEMALE)
         iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[species].iconPalIndexFemale;
 
     spriteId = CreateMonIconSprite(&iconTemplate, x, y, subpriority);
@@ -183,20 +183,12 @@ u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s1
     return spriteId;
 }
 
-u16 GetIconSpecies(u16 species, u32 personality)
+u16 GetIconSpecies(u16 species, u8 form)
 {
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
-        species = GetUnownSpeciesId(personality);
+        species = GetUnownSpeciesId(form);
     return species;
-}
-
-u16 GetUnownLetterByPersonality(u32 personality)
-{
-    if (!personality)
-        return 0;
-    else
-        return GET_UNOWN_LETTER(personality);
 }
 
 u16 GetIconSpeciesNoPersonality(u16 species)
@@ -208,9 +200,9 @@ u16 GetIconSpeciesNoPersonality(u16 species)
     return GetIconSpecies(species, 0);
 }
 
-const u8 *GetMonIconPtr(u16 species, u32 personality)
+const u8 *GetMonIconPtr(u16 species, u8 form, u8 gender)
 {
-    return GetMonIconTiles(GetIconSpecies(species, personality), personality);
+    return GetMonIconTiles(GetIconSpecies(species, form), gender);
 }
 
 void FreeAndDestroyMonIconSprite(struct Sprite *sprite)
@@ -241,11 +233,11 @@ void LoadMonIconPalette(u16 species)
         LoadSpritePalette(&gMonIconPaletteTable[palIndex]);
 }
 
-void LoadMonIconPalettePersonality(u16 species, u32 personality)
+void LoadMonIconPaletteGender(u16 species, u8 gender)
 {
     u8 palIndex;
     species = SanitizeSpeciesId(species);
-    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL && gender == FEMALE)
         palIndex = gSpeciesInfo[species].iconPalIndexFemale;
     else
         palIndex = gSpeciesInfo[species].iconPalIndex;
@@ -280,14 +272,14 @@ void SpriteCB_MonIcon(struct Sprite *sprite)
     UpdateMonIconFrame(sprite);
 }
 
-const u8 *GetMonIconTiles(u16 species, u32 personality)
+const u8 *GetMonIconTiles(u16 species, u8 gender)
 {
     const u8 *iconSprite;
 
     if (species > NUM_SPECIES)
         species = SPECIES_NONE;
 
-    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL && gender == FEMALE)
         iconSprite = gSpeciesInfo[species].iconSpriteFemale;
     else if (gSpeciesInfo[species].iconSprite != NULL)
         iconSprite = gSpeciesInfo[species].iconSprite;

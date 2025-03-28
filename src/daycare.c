@@ -438,7 +438,7 @@ static void UNUSED ClearAllDaycareData(struct DayCare *daycare)
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
         ClearDaycareMon(&daycare->mons[i]);
 
-    daycare->offspringPersonality = 0;
+    daycare->offspringNature = 0;
     daycare->stepCounter = 0;
 }
 
@@ -509,7 +509,6 @@ static s32 GetParentToInheritNature(struct DayCare *daycare)
 static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
 {
     s32 parent;
-    s32 natureTries = 0;
 
     SeedRng2(gMain.vblankCounter2);
     parent = GetParentToInheritNature(daycare);
@@ -517,25 +516,15 @@ static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
     // don't inherit nature
     if (parent < 0)
     {
-        daycare->offspringPersonality = (Random2() << 16) | ((Random() % 0xfffe) + 1);
+        daycare->offspringNature = Random() % NUM_NATURES;
     }
     // inherit nature
     else
     {
-        u8 wantedNature = GetNatureFromPersonality(GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_PERSONALITY, NULL));
-        u32 personality;
-
-        do
-        {
-            personality = (Random2() << 16) | (Random());
-            if (wantedNature == GetNatureFromPersonality(personality) && personality != 0)
-                break; // found a personality with the same nature
-
-            natureTries++;
-        } while (natureTries <= 2400);
-
-        daycare->offspringPersonality = personality;
+        daycare->offspringNature = GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_NATURE, NULL);
     }
+
+    daycare->isEggPending = TRUE;
 
     FlagSet(FLAG_PENDING_DAYCARE_EGG);
 }
@@ -543,7 +532,7 @@ static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
 // Functionally unused
 static void _TriggerPendingDaycareMaleEgg(struct DayCare *daycare)
 {
-    daycare->offspringPersonality = (Random()) | (EGG_GENDER_MALE);
+    daycare->isEggPending = TRUE;
     FlagSet(FLAG_PENDING_DAYCARE_EGG);
 }
 
@@ -915,7 +904,7 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
 
 static void RemoveEggFromDayCare(struct DayCare *daycare)
 {
-    daycare->offspringPersonality = 0;
+    daycare->offspringNature = 0;
     daycare->stepCounter = 0;
 }
 
@@ -1012,13 +1001,13 @@ static u16 DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parent
     }
 
     eggSpecies = GetEggSpecies(species[parentSlots[0]]);
-    if (eggSpecies == SPECIES_NIDORAN_F && daycare->offspringPersonality & EGG_GENDER_MALE)
+    if (eggSpecies == SPECIES_NIDORAN_F && Random() % 2 == 0)
         eggSpecies = SPECIES_NIDORAN_M;
-    else if (eggSpecies == SPECIES_ILLUMISE && daycare->offspringPersonality & EGG_GENDER_MALE)
+    else if (eggSpecies == SPECIES_ILLUMISE && Random() % 2 == 0)
         eggSpecies = SPECIES_VOLBEAT;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_NIDORAN_M && !(daycare->offspringPersonality & EGG_GENDER_MALE))
+    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_NIDORAN_M && Random() % 2 == 0)
         eggSpecies = SPECIES_NIDORAN_F;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_VOLBEAT && !(daycare->offspringPersonality & EGG_GENDER_MALE))
+    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_VOLBEAT && Random() % 2 == 0)
         eggSpecies = SPECIES_ILLUMISE;
     else if (eggSpecies == SPECIES_MANAPHY)
         eggSpecies = SPECIES_PHIONE;
@@ -1075,14 +1064,17 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
 void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
 {
     u8 metLevel;
-    u16 ball;
     u8 language;
     u8 metLocation;
     u8 isEgg;
 
-    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS,
+              FALSE, 0,
+              FALSE, 0,
+              FALSE, 0,
+              FALSE, 0,
+              OT_ID_PLAYER_ID, 0);
     metLevel = 0;
-    ball = ITEM_POKE_BALL;
     language = LANGUAGE_JAPANESE;
     SetMonData(mon, MON_DATA_NICKNAME, sJapaneseEggNickname);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &gSpeciesInfo[species].eggCycles);
@@ -1100,15 +1092,16 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
 
 static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *daycare)
 {
-    u32 personality;
-    u16 ball;
     u8 metLevel;
     u8 language;
 
-    personality = daycare->offspringPersonality;
-    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS,
+              FALSE, 0,
+              FALSE, 0,
+              FALSE, 0,
+              TRUE, daycare->offspringNature,
+              OT_ID_PLAYER_ID, 0);
     metLevel = 0;
-    ball = ITEM_POKE_BALL;
     language = LANGUAGE_JAPANESE;
     SetMonData(mon, MON_DATA_NICKNAME, sJapaneseEggNickname);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &gSpeciesInfo[species].eggCycles);
@@ -1132,7 +1125,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
     }
 
     // Check if an egg should be produced
-    if (daycare->offspringPersonality == 0 && validEggs == DAYCARE_MON_COUNT && (daycare->mons[1].steps & 0xFF) == 0xFF)
+    if (daycare->isEggPending == TRUE && validEggs == DAYCARE_MON_COUNT && (daycare->mons[1].steps & 0xFF) == 0xFF)
     {
         u8 compatibility = ModifyBreedingScoreForOvalCharm(GetDaycareCompatibilityScore(daycare));
         if (compatibility > (Random() * 100u) / USHRT_MAX)
@@ -1180,7 +1173,7 @@ bool8 ShouldEggHatch(void)
 
 static bool8 IsEggPending(struct DayCare *daycare)
 {
-    return (daycare->offspringPersonality != 0);
+    return daycare->isEggPending;
 }
 
 // gStringVar1 = first mon's nickname
@@ -1267,12 +1260,9 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        u32 personality;
-
         species[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
         trainerIds[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_OT_ID);
-        personality = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_PERSONALITY);
-        genders[i] = GetGenderFromSpeciesAndPersonality(species[i], personality);
+        genders[i] = GetGenderU8Value(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_GENDER));
         eggGroups[i][0] = gSpeciesInfo[species[i]].eggGroups[0];
         eggGroups[i][1] = gSpeciesInfo[species[i]].eggGroups[1];
     }

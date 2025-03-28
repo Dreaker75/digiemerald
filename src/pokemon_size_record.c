@@ -50,15 +50,16 @@ extern const u8 gText_Marco[];
 
 static u32 GetMonSizeHash(struct Pokemon *pkmn)
 {
-    u16 personality = GetMonData(pkmn, MON_DATA_PERSONALITY);
     u16 hpIV = GetMonData(pkmn, MON_DATA_HP_IV) & 0xF;
     u16 attackIV = GetMonData(pkmn, MON_DATA_ATK_IV) & 0xF;
     u16 defenseIV = GetMonData(pkmn, MON_DATA_DEF_IV) & 0xF;
     u16 speedIV = GetMonData(pkmn, MON_DATA_SPEED_IV) & 0xF;
     u16 spAtkIV = GetMonData(pkmn, MON_DATA_SPATK_IV) & 0xF;
     u16 spDefIV = GetMonData(pkmn, MON_DATA_SPDEF_IV) & 0xF;
-    u32 hibyte = ((attackIV ^ defenseIV) * hpIV) ^ (personality & 0xFF);
-    u32 lobyte = ((spAtkIV ^ spDefIV) * speedIV) ^ (personality >> 8);
+    u16 nature = GetMonData(pkmn, MON_DATA_NATURE);
+    // NOTE: New function might not work as intended, did not test properly
+    u32 hibyte = ((attackIV ^ defenseIV) * hpIV) ^ (0xF0 | nature);
+    u32 lobyte = ((spAtkIV ^ spDefIV) * speedIV) ^ (0x0F | (nature << 8));
 
     return (hibyte << 8) + lobyte;
 }

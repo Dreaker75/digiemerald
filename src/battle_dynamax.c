@@ -955,8 +955,8 @@ void BS_TrySetStatus2(void)
             break;
         case STATUS2_INFATUATION:
         {
-            u8 atkGender = GetGenderFromSpeciesAndPersonality(gBattleMons[gBattlerAttacker].species, gBattleMons[gBattlerAttacker].personality);
-            u8 defGender = GetGenderFromSpeciesAndPersonality(gBattleMons[gBattlerTarget].species, gBattleMons[gBattlerTarget].personality);
+            u8 atkGender = GetGenderU8Value(gBattleMons[gBattlerAttacker].gender);
+            u8 defGender = GetGenderU8Value(gBattleMons[gBattlerTarget].gender);
             if (!(gBattleMons[gBattlerTarget].status2 & STATUS2_INFATUATION)
                 && gBattleMons[gBattlerTarget].ability != ABILITY_OBLIVIOUS
                 && !IsAbilityOnSide(gBattlerTarget, ABILITY_AROMA_VEIL)

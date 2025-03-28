@@ -136,13 +136,11 @@ struct UnionRoomTrade
 {
     u16 state;
     u16 type;
-    u32 playerPersonality;
     u8 offerPlayerId;
     u16 playerSpecies;
     u16 playerLevel;
     u16 species;
     u16 level;
-    u32 personality;
 };
 
 extern u8 gPlayerCurrActivity;

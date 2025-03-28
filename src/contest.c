@@ -98,7 +98,7 @@ static void PrintContestantMonName(u8);
 static void PrintContestantMonNameWithColor(u8, u8);
 static u8 CreateJudgeSprite(void);
 static u8 CreateJudgeSpeechBubbleSprite(void);
-static u8 CreateContestantSprite(u16, bool8, u32, u32);
+static u8 CreateContestantSprite(u16, u8, u8, u32);
 static void PrintContestMoveDescription(u16);
 static u16 SanitizeSpecies(u16);
 static void ContestClearGeneralTextWindow(void);
@@ -1872,8 +1872,8 @@ static void Task_DoAppeals(u8 taskId)
         SetMoveAnimAttackerData(eContest.currentContestant);
         spriteId = CreateContestantSprite(
             gContestMons[eContest.currentContestant].species,
-            gContestMons[eContest.currentContestant].isShiny,
-            gContestMons[eContest.currentContestant].personality,
+            gContestMons[eContest.currentContestant].form,
+            gContestMons[eContest.currentContestant].gender,
             eContest.currentContestant);
         gSprites[spriteId].x2 = 120;
         gSprites[spriteId].callback = SpriteCB_MonSlideIn;
@@ -2900,9 +2900,10 @@ void CreateContestMonFromParty(u8 partyIndex)
     gContestMons[gContestPlayerMonIndex].moves[1] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE2);
     gContestMons[gContestPlayerMonIndex].moves[2] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE3);
     gContestMons[gContestPlayerMonIndex].moves[3] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE4);
-    gContestMons[gContestPlayerMonIndex].personality = GetMonData(&gPlayerParty[partyIndex], MON_DATA_PERSONALITY);
+    gContestMons[gContestPlayerMonIndex].form = GetMonData(&gPlayerParty[partyIndex], MON_DATA_FORM);
     gContestMons[gContestPlayerMonIndex].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID);
-    gContestMons[gContestPlayerMonIndex].isShiny = GetMonData(&gPlayerParty[partyIndex], MON_DATA_IS_SHINY);
+    gContestMons[gContestPlayerMonIndex].gender = GetMonData(&gPlayerParty[partyIndex], MON_DATA_GENDER);
+    gContestMons[gContestPlayerMonIndex].nature = GetMonData(&gPlayerParty[partyIndex], MON_DATA_NATURE);
 
     heldItem = GetMonData(&gPlayerParty[partyIndex], MON_DATA_HELD_ITEM);
     cool   = gContestMons[gContestPlayerMonIndex].cool;
@@ -3206,14 +3207,14 @@ static u8 CreateJudgeSpeechBubbleSprite(void)
     return spriteId;
 }
 
-static u8 CreateContestantSprite(u16 species, bool8 isShiny, u32 personality, u32 index)
+static u8 CreateContestantSprite(u16 species, u8 form, u8 gender, u32 index)
 {
     u8 spriteId;
     species = SanitizeSpecies(species);
 
-    HandleLoadSpecialPokePic(FALSE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_PLAYER_LEFT], species, personality);
+    HandleLoadSpecialPokePic(FALSE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_PLAYER_LEFT], species, form, gender);
 
-    LoadCompressedPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(2), PLTT_SIZE_4BPP);
+    LoadCompressedPalette(GetMonSpritePalFromSpeciesAndGender(species, gender), OBJ_PLTT_ID(2), PLTT_SIZE_4BPP);
     SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_PLAYER_LEFT);
 
     spriteId = CreateSprite(&gMultiuseSpriteTemplate, 0x70, GetBattlerSpriteFinal_Y(2, species, FALSE), 30);
@@ -5406,7 +5407,8 @@ static void SetMoveSpecificAnimData(u8 contestant)
     case MOVE_ROLE_PLAY:
         targetContestant = eContestantStatus[contestant].contestantAnimTarget;
         gContestResources->moveAnim->targetSpecies = SanitizeSpecies(gContestMons[targetContestant].species);
-        gContestResources->moveAnim->targetPersonality = gContestMons[targetContestant].personality;
+        gContestResources->moveAnim->targetForm = gContestMons[targetContestant].form;
+        gContestResources->moveAnim->targetGender = gContestMons[targetContestant].gender;
         gContestResources->moveAnim->hasTargetAnim = TRUE;
         break;
     case MOVE_RETURN:
@@ -5444,9 +5446,9 @@ static void SetMoveAnimAttackerData(u8 contestant)
 {
     gContestResources->moveAnim->contestant = contestant;
     gContestResources->moveAnim->species = SanitizeSpecies(gContestMons[contestant].species);
-    gContestResources->moveAnim->personality = gContestMons[contestant].personality;
+    gContestResources->moveAnim->form = gContestMons[contestant].form;
+    gContestResources->moveAnim->gender = gContestMons[contestant].gender;
     gContestResources->moveAnim->otId = gContestMons[contestant].otId;
-    gContestResources->moveAnim->isShiny = gContestMons[contestant].isShiny;
 }
 
 static void CreateInvisibleBattleTargetSprite(void)
@@ -5639,7 +5641,9 @@ bool8 SaveContestWinner(u8 rank)
         // Used to save any winner for the Contest Hall or the Museum
         // but excludes the temporary save used by the artist
         u8 id = GetContestWinnerSaveIdx(rank, TRUE);
-        gSaveBlock1Ptr->contestWinners[id].personality = gContestMons[i].personality;
+        gSaveBlock1Ptr->contestWinners[id].form = gContestMons[i].form;
+        gSaveBlock1Ptr->contestWinners[id].gender = gContestMons[i].gender;
+        gSaveBlock1Ptr->contestWinners[id].nature = gContestMons[i].nature;
         gSaveBlock1Ptr->contestWinners[id].species = gContestMons[i].species;
         gSaveBlock1Ptr->contestWinners[id].trainerId = gContestMons[i].otId;
         StringCopy(gSaveBlock1Ptr->contestWinners[id].monName, gContestMons[i].nickname);
@@ -5657,8 +5661,8 @@ bool8 SaveContestWinner(u8 rank)
     else
     {
         // Set the most recent winner so the artist can show the player their painting
-        gCurContestWinner.personality = gContestMons[i].personality;
-        gCurContestWinner.isShiny = gContestMons[i].isShiny;
+        gCurContestWinner.form = gContestMons[i].form;
+        gCurContestWinner.gender = gContestMons[i].gender;
         gCurContestWinner.trainerId = gContestMons[i].otId;
         gCurContestWinner.species = gContestMons[i].species;
         StringCopy(gCurContestWinner.monName, gContestMons[i].nickname);

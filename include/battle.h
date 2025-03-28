@@ -78,8 +78,11 @@ struct ResourceFlags
 
 struct DisableStruct
 {
-    u32 transformedMonPersonality;
-    bool8 transformedMonShininess;
+    u8 transformedMonForm:5;
+    u8 transformedMonGender:2;
+    u8 unused1:1;
+    u8 unused2;
+    u16 unused3;
     u16 disabledMove;
     u16 encoredMove;
     u8 protectUses:4;
@@ -125,7 +128,7 @@ struct DisableStruct
     u8 stickyWebDone:1;
     u8 stealthRockDone:1;
     u8 syrupBombTimer;
-    u8 syrupBombIsShiny:1;
+    u8 unused:1; // syrupBombIsShiny
     u8 steelSurgeDone:1;
     u8 weatherAbilityDone:1;
     u8 terrainAbilityDone:1;
@@ -1079,8 +1082,8 @@ extern u8 gMoveSelectionCursor[MAX_BATTLERS_COUNT];
 extern u8 gBattlerStatusSummaryTaskId[MAX_BATTLERS_COUNT];
 extern u8 gBattlerInMenuId;
 extern bool8 gDoingBattleAnim;
-extern u32 gTransformedPersonalities[MAX_BATTLERS_COUNT];
-extern bool8 gTransformedShininess[MAX_BATTLERS_COUNT];
+extern u8 gTransformedForm[MAX_BATTLERS_COUNT];
+extern u8 gTransformedGender[MAX_BATTLERS_COUNT];
 extern u8 gPlayerDpadHoldFrames;
 extern struct BattleSpriteData *gBattleSpritesDataPtr;
 extern struct MonSpritesGfx *gMonSpritesGfxPtr;

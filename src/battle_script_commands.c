@@ -3717,11 +3717,8 @@ void SetMoveEffect(bool32 primary, bool32 certain)
             case MOVE_EFFECT_SYRUP_BOMB:
                 if (!(gStatuses4[gEffectBattler] & STATUS4_SYRUP_BOMB))
                 {
-                    struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
-
                     gStatuses4[gEffectBattler] |= STATUS4_SYRUP_BOMB;
                     gDisableStructs[gEffectBattler].syrupBombTimer = 3;
-                    gDisableStructs[gEffectBattler].syrupBombIsShiny = IsMonShiny(&party[gBattlerPartyIndexes[gBattlerAttacker]]);
                     gBattleStruct->stickySyrupdBy[gEffectBattler] = gBattlerAttacker;
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_SyrupBombActivates;
@@ -6478,7 +6475,7 @@ static void Cmd_switchinanim(void)
                                  | BATTLE_TYPE_RECORDED_LINK
                                  | BATTLE_TYPE_TRAINER_HILL
                                  | BATTLE_TYPE_FRONTIER)))
-        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
+        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].form);
 
     gAbsentBattlerFlags &= ~(gBitTable[battler]);
 
@@ -8177,9 +8174,10 @@ static void PutMonIconOnLvlUpBanner(void)
 
     struct Pokemon *mon = &gPlayerParty[gBattleStruct->expGetterMonId];
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    u8 form = GetMonData(mon, MON_DATA_FORM);
+    u8 gender = GetMonData(mon, MON_DATA_GENDER);
 
-    iconSheet.data = GetMonIconPtr(species, personality);
+    iconSheet.data = GetMonIconPtr(species, form, gender);
     iconSheet.size = 0x200;
     iconSheet.tag = TAG_LVLUP_BANNER_MON_ICON;
 
@@ -9137,7 +9135,7 @@ static void Cmd_various(void)
         {
             gBattleStruct->palaceFlags |= gBitTable[battler];
             gBattleCommunication[0] = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = sBattlePalaceNatureToFlavorTextId[GetNatureFromPersonality(gBattleMons[battler].personality)];
+            gBattleCommunication[MULTISTRING_CHOOSER] = sBattlePalaceNatureToFlavorTextId[gBattleMons[battler].nature];
         }
         break;
     }
@@ -12494,8 +12492,8 @@ static void Cmd_transformdataexecution(void)
         gBattleMons[gBattlerAttacker].status2 |= STATUS2_TRANSFORMED;
         gDisableStructs[gBattlerAttacker].disabledMove = MOVE_NONE;
         gDisableStructs[gBattlerAttacker].disableTimer = 0;
-        gDisableStructs[gBattlerAttacker].transformedMonPersonality = gBattleMons[gBattlerTarget].personality;
-        gDisableStructs[gBattlerAttacker].transformedMonShininess = gBattleMons[gBattlerTarget].isShiny;
+        gDisableStructs[gBattlerAttacker].transformedMonForm = gBattleMons[gBattlerTarget].form;
+        gDisableStructs[gBattlerAttacker].transformedMonGender = gBattleMons[gBattlerTarget].gender;
         gDisableStructs[gBattlerAttacker].mimickedMoves = 0;
         gDisableStructs[gBattlerAttacker].usedMoves = 0;
 
@@ -14926,7 +14924,7 @@ static void Cmd_trysetcaughtmondexflags(void)
     CMD_ARGS(const u8 *failInstr);
 
     u32 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_SPECIES, NULL);
-    u32 personality = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_PERSONALITY, NULL);
+    u32 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_FORM, NULL);
 
     if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
     {
@@ -14934,7 +14932,7 @@ static void Cmd_trysetcaughtmondexflags(void)
     }
     else
     {
-        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT, personality);
+        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT, form);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -14957,8 +14955,8 @@ static void Cmd_displaydexinfo(void)
             struct Pokemon *mon = &gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]];
             FreeAllWindowBuffers();
             gBattleCommunication[TASK_ID] = DisplayCaughtMonDexPage(species,
-                                                                    GetMonData(mon, MON_DATA_IS_SHINY),
-                                                                    GetMonData(mon, MON_DATA_PERSONALITY));
+                                                                    GetMonData(mon, MON_DATA_FORM),
+                                                                    GetMonData(mon, MON_DATA_GENDER));
             gBattleCommunication[0]++;
         }
         break;
@@ -15115,7 +15113,7 @@ static void Cmd_trygivecaughtmonnick(void)
             DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
                            GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]], MON_DATA_SPECIES),
                            GetMonGender(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]]),
-                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]], MON_DATA_PERSONALITY, NULL),
+                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]], MON_DATA_FORM, NULL),
                            BattleMainCB2);
 
             gBattleCommunication[MULTIUSE_STATE]++;

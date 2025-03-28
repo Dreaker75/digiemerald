@@ -207,14 +207,6 @@ struct DodrioGame_Player
     u32 unused;
 }; // size = 0x3C
 
-// Because Dodrio is required for this minigame,
-// the only relevant information about the selected
-// Pokémon is whether or not it's shiny
-struct DodrioGame_MonInfo
-{
-    bool8 isShiny;
-};
-
 struct DodrioGame_ScoreResults
 {
     u8 ranking;
@@ -269,7 +261,6 @@ struct DodrioGame
     /*0x0154*/ u8 ALIGNED(4) endSoundState;
     /*0x0158*/ bool8 ALIGNED(4) readyToStart[MAX_RFU_PLAYERS];
     /*0x0160*/ struct DodrioGame_Gfx gfx;
-    /*0x318C*/ struct DodrioGame_MonInfo monInfo[MAX_RFU_PLAYERS];
     /*0x31A0*/ struct DodrioGame_Player players[MAX_RFU_PLAYERS];
     /*0x32CC*/ struct DodrioGame_Player player;
     /*0x3308*/ struct DodrioGame_ScoreResults scoreResults[MAX_RFU_PLAYERS];
@@ -313,7 +304,6 @@ static void HandleSound_Leader(void);
 static void HandleSound_Member(void);
 static void CB2_DodrioGame(void);
 static void VBlankCB_DodrioGame(void);
-static void InitMonInfo(struct DodrioGame_MonInfo *, struct Pokemon *);
 static void CreateTask_(TaskFunc, u8);
 static void CreateDodrioGameTask(TaskFunc);
 static void SetGameFunc(u8);
@@ -362,7 +352,7 @@ static bool32 RecvPacket_PickState(u32, u8 *);
 static void SendPacket_ReadyToEnd(bool32);
 static bool32 RecvPacket_ReadyToEnd(u32);
 static void LoadDodrioGfx(void);
-static void CreateDodrioSprite(struct DodrioGame_MonInfo *, u8, u8, u8);
+static void CreateDodrioSprite(u8, u8, u8);
 static void StartDodrioMissedAnim(u8);
 static void StartDodrioIntroAnim(u8);
 static void FreeDodrioSprites(u8);
@@ -672,7 +662,6 @@ void StartDodrioBerryPicking(u16 partyId, void (*exitCallback)(void))
         sGame->exitCallback = exitCallback;
         sGame->multiplayerId = GetMultiplayerId();
         sGame->player = sGame->players[sGame->multiplayerId];
-        InitMonInfo(&sGame->monInfo[sGame->multiplayerId], &gPlayerParty[partyId]);
         CreateTask(Task_StartDodrioGame, 1);
         SetMainCallback2(CB2_DodrioGame);
         SetRandomPrize();
@@ -787,7 +776,7 @@ static void Task_StartDodrioGame(u8 taskId)
         numPlayers = sGame->numPlayers;
         LoadDodrioGfx();
         for (i = 0; i < numPlayers; i++)
-            CreateDodrioSprite(&sGame->monInfo[sGame->posToPlayerId[i]], i, sGame->posToPlayerId[i], sGame->numPlayers);
+            CreateDodrioSprite(i, sGame->posToPlayerId[i], sGame->numPlayers);
 
         SetAllDodrioInvisibility(FALSE, sGame->numPlayers);
         sGame->startState++;
@@ -1439,11 +1428,8 @@ static void Task_CommunicateMonInfo(u8 taskId)
     switch (tState)
     {
     case 0:
-        if (SendBlock(0, &sGame->monInfo[sGame->multiplayerId].isShiny, sizeof(sGame->monInfo[sGame->multiplayerId].isShiny)))
-        {
-            sGame->playersReceived = 0;
-            tState++;
-        }
+        sGame->playersReceived = 0;
+        tState++;
         break;
     case 1:
         if (IsLinkTaskFinished())
@@ -1454,7 +1440,6 @@ static void Task_CommunicateMonInfo(u8 taskId)
         {
             for (i = 0; i < sGame->numPlayers; i++)
             {
-                *(u8 *)&sGame->monInfo[i] = *(u8 *)gBlockRecvBuffer[i];
                 sGame->playersReceived = sGame->numPlayers;
             }
         }
@@ -1800,11 +1785,6 @@ static void VBlankCB_DodrioGame(void)
     TransferPlttBuffer();
     LoadOam();
     ProcessSpriteCopyRequests();
-}
-
-static void InitMonInfo(struct DodrioGame_MonInfo * monInfo, struct Pokemon *mon)
-{
-    monInfo->isShiny = IsMonShiny(mon);
 }
 
 static void CreateTask_(TaskFunc func, u8 priority)
@@ -3841,12 +3821,12 @@ static void LoadDodrioGfx(void)
     LoadSpritePalette(&shiny);
 }
 
-static void CreateDodrioSprite(struct DodrioGame_MonInfo * monInfo, u8 playerId, u8 id, u8 numPlayers)
+static void CreateDodrioSprite(u8 playerId, u8 id, u8 numPlayers)
 {
     struct SpriteTemplate template =
     {
         .tileTag = GFXTAG_DODRIO,
-        .paletteTag = monInfo->isShiny, // PALTAG_DODRIO_NORMAL / PALTAG_DODRIO_SHINY
+        .paletteTag = FALSE, // PALTAG_DODRIO_NORMAL / PALTAG_DODRIO_SHINY
         .oam = &sOamData_Dodrio,
         .anims = sAnims_Dodrio,
         .images = NULL,

@@ -114,7 +114,12 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     if (OW_SYNCHRONIZE_NATURE > GEN_3)
         CreateMonWithNature(&gEnemyParty[0], species, level, USE_RANDOM_IVS, PickWildMonNature());
     else
-        CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  OT_ID_PLAYER_ID, 0);
     if (item)
     {
         heldItem[0] = item;
@@ -132,7 +137,12 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     if (OW_SYNCHRONIZE_NATURE > GEN_3)
         CreateMonWithNature(&gEnemyParty[0], species1, level1, 32, PickWildMonNature());
     else
-        CreateMon(&gEnemyParty[0], species1, level1, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&gEnemyParty[0], species1, level1, 32,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  OT_ID_PLAYER_ID, 0);
     if (item1)
     {
         heldItem1[0] = item1;
@@ -143,7 +153,12 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     if (OW_SYNCHRONIZE_NATURE > GEN_3)
         CreateMonWithNature(&gEnemyParty[1], species2, level2, 32, PickWildMonNature());
     else
-        CreateMon(&gEnemyParty[1], species2, level2, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&gEnemyParty[1], species2, level2, 32,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  FALSE, 0,
+                  OT_ID_PLAYER_ID, 0);
     if (item2)
     {
         heldItem2[0] = item2;
@@ -289,7 +304,7 @@ void ToggleGigantamaxFactor(struct ScriptContext *ctx)
     }
 }
 
-u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, bool8 isShiny, bool8 ggMaxFactor, u8 teraType)
+u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, u8 form, bool8 ggMaxFactor, u8 teraType)
 {
     u16 nationalDexNum;
     int sentToPc;
@@ -312,16 +327,9 @@ u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 natu
     if ((gender == MON_MALE && genderRatio != MON_FEMALE && genderRatio != MON_GENDERLESS)
      || (gender == MON_FEMALE && genderRatio != MON_MALE && genderRatio != MON_GENDERLESS)
      || (gender == MON_GENDERLESS && genderRatio == MON_GENDERLESS))
-        CreateMonWithGenderNatureLetter(&mon, species, level, 32, gender, nature, 0);
+        CreateMonWithGenderNatureLetter(&mon, species, level, 32, form, gender, nature);
     else
         CreateMonWithNature(&mon, species, level, 32, nature);
-
-    // shininess
-    if (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY))
-        isShiny = TRUE;
-    else if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
-        isShiny = FALSE;
-    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
 
     // gigantamax factor
     SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &ggMaxFactor);
@@ -355,7 +363,7 @@ u32 ScriptGiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 natu
     // ability
     if (abilityNum == NUM_ABILITY_PERSONALITY)
     {
-        abilityNum = GetMonData(&mon, MON_DATA_PERSONALITY) & 1;
+        abilityNum = GetMonData(&mon, MON_DATA_ABILITY_NUM);
     }
     else if (abilityNum > NUM_NORMAL_ABILITY_SLOTS || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
     {

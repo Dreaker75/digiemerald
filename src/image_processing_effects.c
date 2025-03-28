@@ -10,7 +10,7 @@ u8 gCanvasRowEnd;
 u8 gCanvasHeight;
 u8 gCanvasColumnEnd;
 u8 gCanvasRowStart;
-u8 gCanvasMonPersonality;
+u8 gCanvasMonNature;
 u8 gCanvasWidth;
 u16 *gCanvasPalette;
 u16 gCanvasPaletteStart;
@@ -24,19 +24,19 @@ static void ApplyImageEffect_BlurRight(void);
 static void ApplyImageEffect_BlurDown(void);
 static void ApplyImageEffect_Shimmer(void);
 static void ApplyImageEffect_Grayscale(void);
-static void ApplyImageEffect_PersonalityColor(u8);
+static void ApplyImageEffect_NatureColor(u8);
 static void ApplyImageEffect_RedChannelGrayscale(u8);
 static void ApplyImageEffect_RedChannelGrayscaleHighlight(u8);
 static void AddPointillismPoints(u16);
 static u16 ConvertColorToGrayscale(u16 *);
 static u16 QuantizePixel_Blur(u16 *, u16 *, u16 *);
-static u16 QuantizePixel_PersonalityColor(u16 *, u8);
+static u16 QuantizePixel_NatureColor(u16 *, u8);
 static u16 QuantizePixel_BlackAndWhite(u16 *);
 static u16 QuantizePixel_BlackOutline(u16 *, u16 *);
 static u16 QuantizePixel_Invert(u16 *);
 static u16 QuantizePixel_BlurHard(u16 *, u16 *, u16 *);
 static u16 QuantizePixel_MotionBlur(u16 *, u16 *);
-static u16 GetColorFromPersonality(u8);
+static u16 GetColorFromNature(u8);
 static void QuantizePalette_Standard(bool8);
 static void SetPresetPalette_PrimaryColors(void);
 static void QuantizePalette_PrimaryColors(void);
@@ -58,7 +58,7 @@ static u16 QuantizePixel_PrimaryColors(u16 *);
 void ApplyImageProcessingEffects(struct ImageProcessingContext *context)
 {
     gCanvasPixels = context->canvasPixels;
-    gCanvasMonPersonality = context->personality;
+    gCanvasMonNature = context->nature;
     gCanvasColumnStart = context->columnStart;
     gCanvasRowStart = context->rowStart;
     gCanvasColumnEnd = context->columnEnd;
@@ -76,7 +76,7 @@ void ApplyImageProcessingEffects(struct ImageProcessingContext *context)
         break;
     case IMAGE_EFFECT_OUTLINE_COLORED:
         ApplyImageEffect_BlackOutline();
-        ApplyImageEffect_PersonalityColor(gCanvasMonPersonality);
+        ApplyImageEffect_NatureColor(gCanvasMonNature);
         break;
     case IMAGE_EFFECT_INVERT_BLACK_WHITE:
         ApplyImageEffect_BlackOutline();
@@ -217,7 +217,7 @@ static void ApplyImageEffect_Blur(void)
     }
 }
 
-static void ApplyImageEffect_PersonalityColor(u8 personality)
+static void ApplyImageEffect_NatureColor(u8 nature)
 {
     u8 i, j;
 
@@ -228,7 +228,7 @@ static void ApplyImageEffect_PersonalityColor(u8 personality)
         for (i = 0; i < gCanvasColumnEnd; i++, pixel++)
         {
             if (!IS_ALPHA(*pixel))
-                *pixel = QuantizePixel_PersonalityColor(pixel, personality);
+                *pixel = QuantizePixel_NatureColor(pixel, nature);
         }
     }
 }
@@ -512,27 +512,27 @@ static u16 ConvertColorToGrayscale(u16 *color)
 
 // The dark colors are the colored edges of the Cool painting effect.
 // Everything else is white.
-static u16 QuantizePixel_PersonalityColor(u16 *color, u8 personality)
+static u16 QuantizePixel_NatureColor(u16 *color, u8 nature)
 {
     u16 red =   GET_R(*color);
     u16 green = GET_G(*color);
     u16 blue =  GET_B(*color);
 
     if (red < 17 && green < 17 && blue < 17)
-        return GetColorFromPersonality(personality);
+        return GetColorFromNature(nature);
     else
         return RGB_WHITE;
 }
 
 // Based on the given value, which comes from the first 8 bits of
-// the mon's personality value, return a color.
-static u16 GetColorFromPersonality(u8 personality)
+// the mon's nature, return a color.
+static u16 GetColorFromNature(u8 nature)
 {
     u16 red =   0;
     u16 green = 0;
     u16 blue =  0;
-    u8 strength = (personality / 6) % 3;
-    u8 colorType = personality % 6;
+    u8 strength = (nature / 6) % 3;
+    u8 colorType = nature % 6;
 
     switch (colorType)
     {

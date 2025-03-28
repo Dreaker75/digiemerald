@@ -389,7 +389,7 @@ u8 PickWildMonNature(void)
         && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE
         && (OW_SYNCHRONIZE_NATURE == GEN_8 || Random() % 2 == 0))
     {
-        return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
+        return GetMonData(&gPlayerParty[0], MON_DATA_NATURE);
     }
 
     // random nature
@@ -415,19 +415,17 @@ static void CreateWildMon(u16 species, u8 level)
     if (checkCuteCharm
         && !GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
         && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM
+        && GetMonData(&gPlayerParty[0], MON_DATA_GENDER) != GENDERLESS
         && Random() % 3 != 0)
     {
-        u16 leadingMonSpecies = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
-        u32 leadingMonPersonality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
-        u8 gender = GetGenderFromSpeciesAndPersonality(leadingMonSpecies, leadingMonPersonality);
+        u8 gender = GetMonData(&gPlayerParty[0], MON_DATA_GENDER);
 
-        // misses mon is genderless check, although no genderless mon can have cute charm as ability
-        if (gender == MON_FEMALE)
-            gender = MON_MALE;
-        else
-            gender = MON_FEMALE;
+        if (gender == FEMALE)
+            gender = MALE;
+        else // if (gender == MALE) because GENDERLESS is checked before entering this section
+            gender = FEMALE;
 
-        CreateMonWithGenderNatureLetter(&gEnemyParty[0], species, level, USE_RANDOM_IVS, gender, PickWildMonNature(), 0);
+        CreateMonWithGenderNatureLetter(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, gender, PickWildMonNature());
         return;
     }
 

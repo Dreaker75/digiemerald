@@ -116,7 +116,6 @@ static void SpriteCB_UnusedBattleInit(struct Sprite *sprite);
 static void SpriteCB_UnusedBattleInit_Main(struct Sprite *sprite);
 static void TrySpecialEvolution(void);
 static u32 Crc32B (const u8 *data, u32 size);
-static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i);
 
 EWRAM_DATA u16 gBattle_BG0_X = 0;
 EWRAM_DATA u16 gBattle_BG0_Y = 0;
@@ -210,8 +209,8 @@ EWRAM_DATA u8 gMoveSelectionCursor[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBattlerStatusSummaryTaskId[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBattlerInMenuId = 0;
 EWRAM_DATA bool8 gDoingBattleAnim = FALSE;
-EWRAM_DATA u32 gTransformedPersonalities[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA bool8 gTransformedShininess[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA u8 gTransformedForm[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA u8 gTransformedGender[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gPlayerDpadHoldFrames = 0;
 EWRAM_DATA struct BattleSpriteData *gBattleSpritesDataPtr = NULL;
 EWRAM_DATA struct MonSpritesGfx *gMonSpritesGfxPtr = NULL;
@@ -1585,8 +1584,8 @@ static void SetMultiPartnerMenuParty(u8 offset)
         gMultiPartnerParty[i].hp          = GetMonData(&gPlayerParty[offset + i], MON_DATA_HP);
         gMultiPartnerParty[i].maxhp       = GetMonData(&gPlayerParty[offset + i], MON_DATA_MAX_HP);
         gMultiPartnerParty[i].status      = GetMonData(&gPlayerParty[offset + i], MON_DATA_STATUS);
-        gMultiPartnerParty[i].personality = GetMonData(&gPlayerParty[offset + i], MON_DATA_PERSONALITY);
-        gMultiPartnerParty[i].gender      = GetMonGender(&gPlayerParty[offset + i]);
+        gMultiPartnerParty[i].form        = GetMonData(&gPlayerParty[offset + i], MON_DATA_FORM);
+        gMultiPartnerParty[i].gender      = GetMonData(&gPlayerParty[offset + i], MON_DATA_GENDER);
         StripExtCtrlCodes(gMultiPartnerParty[i].nickname);
         if (GetMonData(&gPlayerParty[offset + i], MON_DATA_LANGUAGE) != LANGUAGE_JAPANESE)
             PadNameString(gMultiPartnerParty[i].nickname, CHAR_SPACE);
@@ -2148,35 +2147,6 @@ static u32 Crc32B (const u8 *data, u32 size)
    return ~crc;
 }
 
-static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i)
-{
-    const u8 *buffer = (const u8 *) &trainer->party[i];
-    u32 n = sizeof(*trainer->party);
-    return Crc32B(buffer, n);
-}
-
-void ModifyPersonalityForNature(u32 *personality, u32 newNature)
-{
-    u32 nature = GetNatureFromPersonality(*personality);
-    s32 diff = abs((s32)nature - (s32)newNature);
-    s32 sign = (nature > newNature) ? 1 : -1;
-    if (diff > NUM_NATURES / 2)
-    {
-        diff = NUM_NATURES - diff;
-        sign *= -1;
-    }
-    *personality -= (diff * sign);
-}
-
-u32 GeneratePersonalityForGender(u32 gender, u32 species)
-{
-    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
-    if (gender == MON_MALE)
-        return ((255 - speciesInfo->genderRatio) / 2) + speciesInfo->genderRatio;
-    else
-        return speciesInfo->genderRatio / 2;
-}
-
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry)
 {
     bool32 noMoveSet = TRUE;
@@ -2202,7 +2172,6 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
-    u32 personalityValue;
     s32 i;
     u8 monsCount;
     if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
@@ -2226,31 +2195,22 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 
         for (i = 0; i < monsCount; i++)
         {
-            u32 personalityHash = GeneratePartyHash(trainer, i);
             const struct TrainerMon *partyData = trainer->party;
             u32 otIdType = OT_ID_RANDOM_NO_SHINY;
             u32 fixedOtId = 0;
-            u32 ability = 0;
-
-            if (trainer->doubleBattle == TRUE)
-                personalityValue = 0x80;
-            else if (trainer->encounterMusic_gender & F_TRAINER_FEMALE)
-                personalityValue = 0x78; // Use personality more likely to result in a female Pokémon
-            else
-                personalityValue = 0x88; // Use personality more likely to result in a male Pokémon
-
-            personalityValue += personalityHash << 8;
-            if (partyData[i].gender == TRAINER_MON_MALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[i].species);
-            else if (partyData[i].gender == TRAINER_MON_FEMALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[i].species);
-            ModifyPersonalityForNature(&personalityValue, partyData[i].nature);
-            if (partyData[i].isShiny)
+            u8 hasFixedAbility = partyData[i].ability != ABILITY_NONE;
+            u8 ability = partyData[i].ability;
+            if (ability >= ARRAY_COUNT(gSpeciesInfo[partyData[i].species].abilities))
             {
-                otIdType = OT_ID_PRESET;
-                fixedOtId = HIHALF(personalityValue) ^ LOHALF(personalityValue);
+                ability = 0;
             }
-            CreateMon(&party[i], partyData[i].species, partyData[i].lvl, 0, TRUE, personalityValue, otIdType, fixedOtId);
+
+            CreateMon(&party[i], partyData[i].species, partyData[i].lvl, 0,
+                      TRUE, partyData[i].form,
+                      TRUE, partyData[i].gender,
+                      hasFixedAbility, ability,
+                      (partyData[i].nature != 0 ? TRUE : FALSE), partyData[i].nature,
+                      otIdType, fixedOtId);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[i]);
@@ -2264,37 +2224,11 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[i].ev[4]));
                 SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[i].ev[5]));
             }
-            if (partyData[i].ability != ABILITY_NONE)
-            {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
-                u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-                for (ability = 0; ability < maxAbilities; ++ability)
-                {
-                    if (speciesInfo->abilities[ability] == partyData[i].ability)
-                        break;
-                }
-                if (ability >= maxAbilities)
-                    ability = 0;
-            }
-            else if (B_TRAINER_MON_RANDOM_ABILITY)
-            {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
-                ability = personalityHash % 3;
-                while (speciesInfo->abilities[ability] == ABILITY_NONE)
-                {
-                    ability--;
-                }
-            }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &ability);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
             if (partyData[i].nickname != NULL)
             {
                 SetMonData(&party[i], MON_DATA_NICKNAME, partyData[i].nickname);
-            }
-            if (partyData[i].isShiny)
-            {
-                u32 data = TRUE;
-                SetMonData(&party[i], MON_DATA_IS_SHINY, &data);
             }
             if (partyData[i].dynamaxLevel > 0)
             {
@@ -2965,7 +2899,7 @@ void SpriteCallbackDummy_2(struct Sprite *sprite)
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
 {
     u8 battler = sprite->sBattler;
-    u32 personality = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_PERSONALITY);
+    u8 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battler]], MON_DATA_FORM);
     u16 species;
     u8 yOffset;
 
@@ -2976,7 +2910,7 @@ void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
 
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
-        species = GetUnownSpeciesId(personality);
+        species = GetUnownSpeciesId(form);
     yOffset = gSpeciesInfo[species].frontPicYOffset;
 
     sprite->data[3] = 8 - yOffset / 8;
@@ -3956,7 +3890,7 @@ static void DoBattleIntro(void)
                                           | BATTLE_TYPE_RECORDED_LINK
                                           | BATTLE_TYPE_TRAINER_HILL)))
                 {
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
+                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].form);
                 }
             }
 

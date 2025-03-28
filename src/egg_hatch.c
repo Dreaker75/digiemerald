@@ -312,8 +312,8 @@ static const s16 sEggShardVelocities[][2] =
 static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 {
     u16 species;
-    u32 personality, pokerus;
-    u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter;
+    u32 pokerus;
+    u8 form, gender, ability, nature, i, friendship, language, gameMet, markings, isModernFatefulEncounter;
     u16 moves[MAX_MON_MOVES];
     u32 ivs[NUM_STATS];
 
@@ -322,7 +322,10 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
     for (i = 0; i < MAX_MON_MOVES; i++)
         moves[i] = GetMonData(egg, MON_DATA_MOVE1 + i);
 
-    personality = GetMonData(egg, MON_DATA_PERSONALITY);
+    form = GetMonData(egg, MON_DATA_FORM);
+    gender = GetMonData(egg, MON_DATA_GENDER);
+    ability = GetMonData(egg, MON_DATA_ABILITY_NUM);
+    nature = GetMonData(egg, MON_DATA_NATURE);
 
     for (i = 0; i < NUM_STATS; i++)
         ivs[i] = GetMonData(egg, MON_DATA_HP_IV + i);
@@ -334,7 +337,12 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
     pokerus = GetMonData(egg, MON_DATA_POKERUS);
     isModernFatefulEncounter = GetMonData(egg, MON_DATA_MODERN_FATEFUL_ENCOUNTER);
 
-    CreateMon(temp, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+    CreateMon(temp, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS,
+         TRUE, form,
+         TRUE, gender,
+         TRUE, ability,
+         TRUE, nature,
+          OT_ID_PLAYER_ID, 0);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonData(temp, MON_DATA_MOVE1 + i,  &moves[i]);
@@ -440,10 +448,11 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
     case 0:
         // Load mon sprite gfx
         {
-            u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
+            u8 form = GetMonData(mon, MON_DATA_FORM);
+            u8 gender = GetMonData(mon, MON_DATA_GENDER);
             HandleLoadSpecialPokePic(TRUE,
                                      gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + B_POSITION_OPPONENT_LEFT],
-                                     species, pid);
+                                     species, form, gender);
             LoadCompressedSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
             *speciesLoc = species;
         }
@@ -603,8 +612,7 @@ static void Task_EggHatchPlayBGM(u8 taskId)
 static void CB2_EggHatch(void)
 {
     u16 species;
-    u8 gender;
-    u32 personality;
+    u8 form, gender;
 
     switch (sEggHatchData->state)
     {
@@ -688,8 +696,8 @@ static void CB2_EggHatch(void)
             GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar3);
             species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gender = GetMonGender(&gPlayerParty[sEggHatchData->eggPartyId]);
-            personality = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_PERSONALITY, 0);
-            DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, EggHatchSetMonNickname);
+            form = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_FORM, 0);
+            DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, form, EggHatchSetMonNickname);
             break;
         case 1: // No
         case MENU_B_PRESSED:

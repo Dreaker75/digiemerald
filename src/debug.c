@@ -272,7 +272,7 @@ struct DebugMonData
 {
     u16 species;
     u8 level;
-    bool8 isShiny:1;
+    u8 unused:1;
     u8 nature:5;
     u8 abilityNum:2;
     u8  mon_iv_hp;
@@ -3094,7 +3094,6 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
 {
     sDebugMonData->species          = 1;
     sDebugMonData->level            = MIN_LEVEL;
-    sDebugMonData->isShiny          = FALSE;
     sDebugMonData->nature           = 0;
     sDebugMonData->abilityNum       = 0;
     sDebugMonData->mon_iv_hp        = 0;
@@ -3151,7 +3150,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
 
     FreeMonIconPalettes();
     LoadMonIconPalette(gTasks[taskId].tInput);
-    gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
+    gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0, 0);
     gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
 }
 
@@ -3190,7 +3189,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
 
     FreeMonIconPalettes();
     LoadMonIconPalette(gTasks[taskId].tInput);
-    gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
+    gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0, 0);
     gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
     gTasks[taskId].tIterator = 0;
 }
@@ -3234,7 +3233,7 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
         FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
         FreeMonIconPalettes();
         LoadMonIconPalette(gTasks[taskId].tInput);
-        gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
+        gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0, 0);
         gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
     }
 
@@ -3354,7 +3353,6 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->isShiny = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
@@ -3930,7 +3928,6 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 ev_val;
     u16 species     = sDebugMonData->species;
     u8 level        = sDebugMonData->level;
-    bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
     u8 abilityNum   = sDebugMonData->abilityNum;
     moves[0]        = sDebugMonData->mon_move_0;
@@ -3954,9 +3951,6 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     if (nature == NUM_NATURES || nature == 0xFF)
         nature = Random() % NUM_NATURES;
     CreateMonWithNature(&mon, species, level, 32, nature);
-
-    //Shininess
-    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
 
     //IVs
     for (i = 0; i < NUM_STATS; i++)
@@ -4078,14 +4072,16 @@ static void DebugAction_OpenPCBagFillMenu(u8 taskId)
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffinity
 {
     int boxId, boxPosition;
-    u32 personality;
     struct BoxPokemon boxMon;
     u16 species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
-    personality = Random32();
-
-    CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS, FALSE, personality, OT_ID_PLAYER_ID, 0);
+    CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS,
+                 TRUE, 0,
+                 TRUE, FEMALE,
+                 TRUE, 0,
+                 TRUE, 0,
+                 OT_ID_PLAYER_ID, 0);
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
@@ -4123,7 +4119,12 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
             {
                 if (!spaceAvailable)
                     PlayBGM(MUS_RG_MYSTERY_GIFT);
-                CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+                CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS,
+                             TRUE, 0,
+                             TRUE, FEMALE,
+                             TRUE, 0,
+                             TRUE, 0,
+                             OT_ID_PLAYER_ID, 0);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
                 species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
                 spaceAvailable = TRUE;

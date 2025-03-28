@@ -176,7 +176,7 @@ struct NamingScreenData
     u8 *destBuffer;
     u16 monSpecies;
     u16 monGender;
-    u32 monPersonality;
+    u32 monForms;
     MainCallback returnCallback;
 };
 
@@ -392,7 +392,7 @@ static void VBlankCB_NamingScreen(void);
 static void NamingScreen_ShowBgs(void);
 static bool8 IsWideLetter(u8);
 
-void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u32 monPersonality, MainCallback returnCallback)
+void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u8 form, MainCallback returnCallback)
 {
     sNamingScreen = Alloc(sizeof(struct NamingScreenData));
     if (!sNamingScreen)
@@ -404,7 +404,7 @@ void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGende
         sNamingScreen->templateNum = templateNum;
         sNamingScreen->monSpecies = monSpecies;
         sNamingScreen->monGender = monGender;
-        sNamingScreen->monPersonality = monPersonality;
+        sNamingScreen->monForms = form;
         sNamingScreen->destBuffer = destBuffer;
         sNamingScreen->returnCallback = returnCallback;
 
@@ -1418,7 +1418,7 @@ static void NamingScreen_CreateMonIcon(void)
     u8 spriteId;
 
     LoadMonIconPalettes();
-    spriteId = CreateMonIcon(sNamingScreen->monSpecies, SpriteCallbackDummy, 56, 40, 0, sNamingScreen->monPersonality);
+    spriteId = CreateMonIcon(sNamingScreen->monSpecies, SpriteCallbackDummy, 56, 40, 0, sNamingScreen->monForms, sNamingScreen->monGender);
     gSprites[spriteId].oam.priority = 3;
 }
 

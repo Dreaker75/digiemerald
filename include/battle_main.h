@@ -14,8 +14,10 @@ struct MultiPartnerMenuPokemon
     /*0x10*/ u16 hp;
     /*0x12*/ u16 maxhp;
     /*0x14*/ u32 status;
-    /*0x18*/ u32 personality;
-    /*0x1C*/ u8 gender;
+    /*0x18*/ u8 form:5;
+    /*0x18*/ u8 gender:2;
+    /*0x18*/ u8 unused1:1;
+    /*0x18*/ u32 unused2;
     /*0x1D*/ u8 language;
 };
 
@@ -67,8 +69,6 @@ void SpecialStatusesClear(void);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
-void ModifyPersonalityForNature(u32 *personality, u32 newNature);
-u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];

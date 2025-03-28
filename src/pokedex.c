@@ -1524,8 +1524,7 @@ void ResetPokedex(void)
     gSaveBlock2Ptr->pokedex.order = 0;
     gSaveBlock2Ptr->pokedex.nationalMagic = 0;
     gSaveBlock2Ptr->pokedex.unknown2 = 0;
-    gSaveBlock2Ptr->pokedex.unownPersonality = 0;
-    gSaveBlock2Ptr->pokedex.spindaPersonality = 0;
+    gSaveBlock2Ptr->pokedex.unownForm = 0;
     gSaveBlock2Ptr->pokedex.unknown3 = 0;
     DisableNationalPokedex();
     for (i = 0; i < NUM_DEX_FLAG_BYTES; i++)
@@ -3978,14 +3977,13 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 }
 
 #define tState         data[0]
-#define tSpecies        data[1]
+#define tSpecies       data[1]
 #define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
-#define tIsShiny       data[13]
-#define tPersonalityLo data[14]
-#define tPersonalityHi data[15]
+#define tGender        data[13]
+#define tForm          data[14]
 
-u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
+u8 DisplayCaughtMonDexPage(u16 species, u8 form, u8 gender)
 {
     u8 taskId = 0;
     if (POKEDEX_PLUS_HGSS)
@@ -3995,9 +3993,8 @@ u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 
     gTasks[taskId].tState = 0;
     gTasks[taskId].tSpecies = species;
-    gTasks[taskId].tIsShiny = isShiny;
-    gTasks[taskId].tPersonalityLo = personality;
-    gTasks[taskId].tPersonalityHi = personality >> 16;
+    gTasks[taskId].tGender = gender;
+    gTasks[taskId].tForm = form;
     return taskId;
 }
 
@@ -4048,7 +4045,7 @@ static void Task_DisplayCaughtMonDexPage(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 4:
-        spriteId = CreateMonPicSprite(species, FALSE, ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo, TRUE, MON_PAGE_X, MON_PAGE_Y, 0, TAG_NONE);
+        spriteId = CreateMonPicSprite(species, gTasks[taskId].tForm, gTasks[taskId].tGender, TRUE, MON_PAGE_X, MON_PAGE_Y, 0, TAG_NONE);
         gSprites[spriteId].oam.priority = 0;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
         SetVBlankCallback(gPokedexVBlankCB);
@@ -4098,8 +4095,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        bool32 isShiny;
-        u32 personality;
+        u8 gender;
         u8 paletteNum;
         const u32 *lzPaletteData;
         void *buffer;
@@ -4113,10 +4109,9 @@ static void Task_ExitCaughtMonPage(u8 taskId)
         if (buffer)
             Free(buffer);
 
-        isShiny = (bool8)gTasks[taskId].tIsShiny;
-        personality = ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo;
+        gender = (u8)gTasks[taskId].tGender;
         paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
-        lzPaletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, personality);
+        lzPaletteData = GetMonSpritePalFromSpeciesAndGender(gTasks[taskId].tSpecies, gender);
         LoadCompressedPalette(lzPaletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
         DestroyTask(taskId);
     }
@@ -4141,8 +4136,7 @@ static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
 #undef tMonSpriteId
 #undef tOtIdLo
 #undef tOtIdHi
-#undef tPersonalityLo
-#undef tPersonalityHi
+#undef tForm
 
 // u32 value is re-used, but passed as a bool that's TRUE if national dex is enabled
 static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
@@ -4833,27 +4827,20 @@ static u16 GetNextPosition(u8 direction, u16 position, u16 min, u16 max)
     return position;
 }
 
-// Unown and Spinda use the personality of the first seen individual of that species
+// Unown uses the personality of the first seen individual of that species
 // All others use personality 0
-static u32 GetPokedexMonPersonality(u16 species)
+static u32 GetPokedexMonForm(u16 species)
 {
-    if (species == SPECIES_UNOWN || species == SPECIES_SPINDA)
-    {
-        if (species == SPECIES_UNOWN)
-            return gSaveBlock2Ptr->pokedex.unownPersonality;
-        else
-            return gSaveBlock2Ptr->pokedex.spindaPersonality;
-    }
+    if (species == SPECIES_UNOWN)
+        return gSaveBlock2Ptr->pokedex.unownForm;
     else
-    {
-        return 0xFF; //Changed from 0 to make it so the Pokédex shows the default mon pics instead of the female versions.
-    }
+        return 0xFF; // Changed from 0 to make it so the Pokédex shows the default mon pics instead of the female versions.
 }
 
 u16 CreateMonSpriteFromNationalDexNumber(u16 nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
     nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return CreateMonPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), TRUE, x, y, paletteSlot, TAG_NONE);
+    return CreateMonPicSprite(nationalNum, FALSE, GetPokedexMonForm(nationalNum), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)

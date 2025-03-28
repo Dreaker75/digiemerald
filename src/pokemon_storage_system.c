@@ -465,7 +465,9 @@ struct PokemonStorageSystemData
     u16 numIconsPerSpecies[MAX_MON_ICONS];
     u16 iconSpeciesList[MAX_MON_ICONS];
     u16 boxSpecies[IN_BOX_COUNT];
-    u32 boxPersonalities[IN_BOX_COUNT];
+    u8 boxForm[IN_BOX_COUNT];
+    u8 boxGender[IN_BOX_COUNT];
+    u16 unused[IN_BOX_COUNT];
     u8 incomingBoxId;
     u8 shiftTimer;
     u8 numPartyToCompact;
@@ -500,10 +502,12 @@ struct PokemonStorageSystemData
     u8 cursorFlipTimer;
     u8 cursorPalNums[2];
     const u32 *displayMonPalette;
-    u32 displayMonPersonality;
+    u8 displayMonForm;
+    u8 displayMonGender;
+    u16 displayUnusedVar1;
     u16 displayMonSpecies;
     u16 displayMonItemId;
-    u16 displayUnusedVar;
+    u16 displayUnusedVar2;
     bool8 setMosaic;
     u8 displayMonMarkings;
     u8 displayMonLevel;
@@ -659,7 +663,7 @@ static bool8 ResetReleaseMonSpritePtr(void);
 #endif
 static void SetMovingMonPriority(u8);
 static void SpriteCB_HeldMon(struct Sprite *);
-static struct Sprite *CreateMonIconSprite(u16, u32, s16, s16, u8, u8);
+static struct Sprite *CreateMonIconSprite(u16, u8, u8, s16, s16, u8, u8);
 static void DestroyBoxMonIcon(struct Sprite *);
 
 // Pokémon data
@@ -867,7 +871,7 @@ static bool8 IsDisplayMosaicActive(void);
 static void ShowYesNoWindow(s8);
 static void UpdateCloseBoxButtonTilemap(bool8);
 static void PrintMessage(u8 id);
-static void LoadDisplayMonGfx(u16, u32);
+static void LoadDisplayMonGfx(u16, u8, u8);
 static void SpriteCB_DisplayMonMosaic(struct Sprite *);
 static void SetPartySlotTilemap(u8, bool8);
 
@@ -3928,7 +3932,7 @@ static void CreateWaveformSprites(void)
 
 static void RefreshDisplayMonData(void)
 {
-    LoadDisplayMonGfx(sStorage->displayMonSpecies, sStorage->displayMonPersonality);
+    LoadDisplayMonGfx(sStorage->displayMonSpecies, sStorage->displayMonForm, sStorage->displayMonGender);
     PrintDisplayMonInfo();
     UpdateWaveformAnimation();
     ScheduleBgCopyTilemapToVram(0);
@@ -4008,14 +4012,14 @@ static void CreateDisplayMonSprite(void)
     }
 }
 
-static void LoadDisplayMonGfx(u16 species, u32 pid)
+static void LoadDisplayMonGfx(u16 species, u8 form, u8 gender)
 {
     if (sStorage->displayMonSprite == NULL)
         return;
 
     if (species != SPECIES_NONE)
     {
-        LoadSpecialPokePic(sStorage->tileBuffer, species, pid, TRUE);
+        LoadSpecialPokePic(sStorage->tileBuffer, species, form, gender, TRUE);
         LZ77UnCompWram(sStorage->displayMonPalette, sStorage->displayMonPalBuffer);
         CpuCopy32(sStorage->tileBuffer, sStorage->displayMonTilePtr, MON_PIC_SIZE);
         LoadPalette(sStorage->displayMonPalBuffer, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
@@ -4467,11 +4471,12 @@ static u8 GetMonIconPriorityByCursorPos(void)
 
 static void CreateMovingMonIcon(void)
 {
-    u32 personality = GetMonData(&sStorage->movingMon, MON_DATA_PERSONALITY);
+    u8 form = GetMonData(&sStorage->movingMon, MON_DATA_FORM);
+    u8 gender = GetMonData(&sStorage->movingMon, MON_DATA_GENDER);
     u16 species = GetMonData(&sStorage->movingMon, MON_DATA_SPECIES_OR_EGG);
     u8 priority = GetMonIconPriorityByCursorPos();
 
-    sStorage->movingMonSprite = CreateMonIconSprite(species, personality, 0, 0, priority, 7);
+    sStorage->movingMonSprite = CreateMonIconSprite(species, form, gender, 0, 0, priority, 7);
     sStorage->movingMonSprite->callback = SpriteCB_HeldMon;
 }
 
@@ -4480,7 +4485,7 @@ static void InitBoxMonSprites(u8 boxId)
     u8 boxPosition;
     u16 i, j, count;
     u16 species;
-    u32 personality;
+    u8 form, gender;
 
     count = 0;
     boxPosition = 0;
@@ -4493,8 +4498,9 @@ static void InitBoxMonSprites(u8 boxId)
             species = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE)
             {
-                personality = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_PERSONALITY);
-                sStorage->boxMonsSprites[count] = CreateMonIconSprite(species, personality, 8 * (3 * j) + 100, 8 * (3 * i) + 44, 2, 19 - j);
+                form = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_FORM);
+                gender = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_GENDER);
+                sStorage->boxMonsSprites[count] = CreateMonIconSprite(species, form, gender, 8 * (3 * j) + 100, 8 * (3 * i) + 44, 2, 19 - j);
             }
             else
             {
@@ -4524,9 +4530,10 @@ static void CreateBoxMonIconAtPos(u8 boxPosition)
     {
         s16 x = 8 * (3 * (boxPosition % IN_BOX_COLUMNS)) + 100;
         s16 y = 8 * (3 * (boxPosition / IN_BOX_COLUMNS)) + 44;
-        u32 personality = GetCurrentBoxMonData(boxPosition, MON_DATA_PERSONALITY);
+        u8 form = GetCurrentBoxMonData(boxPosition, MON_DATA_FORM);
+        u8 gender = GetCurrentBoxMonData(boxPosition, MON_DATA_GENDER);
 
-        sStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(species, personality, x, y, 2, 19 - (boxPosition % IN_BOX_COLUMNS));
+        sStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(species, form, gender, x, y, 2, 19 - (boxPosition % IN_BOX_COLUMNS));
         if (sStorage->boxOption == OPTION_MOVE_ITEMS)
             sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
     }
@@ -4624,7 +4631,8 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
             if (sStorage->boxSpecies[boxPosition] != SPECIES_NONE)
             {
                 sStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(sStorage->boxSpecies[boxPosition],
-                                                                                        sStorage->boxPersonalities[boxPosition],
+                                                                                        sStorage->boxForm[boxPosition],
+                                                                                        sStorage->boxGender[boxPosition],
                                                                                         x, y, 2, subpriority);
                 if (sStorage->boxMonsSprites[boxPosition] != NULL)
                 {
@@ -4648,7 +4656,8 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
             if (sStorage->boxSpecies[boxPosition] != SPECIES_NONE)
             {
                 sStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(sStorage->boxSpecies[boxPosition],
-                                                                                        sStorage->boxPersonalities[boxPosition],
+                                                                                        sStorage->boxForm[boxPosition],
+                                                                                        sStorage->boxGender[boxPosition],
                                                                                         x, y, 2, subpriority);
                 if (sStorage->boxMonsSprites[boxPosition] != NULL)
                 {
@@ -4754,7 +4763,10 @@ static void GetIncomingBoxMonData(u8 boxId)
         {
             sStorage->boxSpecies[boxPosition] = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_SPECIES_OR_EGG);
             if (sStorage->boxSpecies[boxPosition] != SPECIES_NONE)
-                sStorage->boxPersonalities[boxPosition] = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_PERSONALITY);
+            {
+                sStorage->boxForm[boxPosition] = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_FORM);
+                sStorage->boxGender[boxPosition] = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_GENDER);
+            }
             boxPosition++;
         }
     }
@@ -4781,17 +4793,19 @@ static void CreatePartyMonsSprites(bool8 visible)
 {
     u16 i, count;
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
-    u32 personality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
+    u8 form = GetMonData(&gPlayerParty[0], MON_DATA_FORM);
+    u8 gender = GetMonData(&gPlayerParty[0], MON_DATA_GENDER);
 
-    sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
+    sStorage->partySprites[0] = CreateMonIconSprite(species, form, gender, 104, 64, 1, 12);
     count = 1;
     for (i = 1; i < PARTY_SIZE; i++)
     {
         species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE)
         {
-            personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-            sStorage->partySprites[i] = CreateMonIconSprite(species, personality, 152,  8 * (3 * (i - 1)) + 16, 1, 12);
+            form = GetMonData(&gPlayerParty[i], MON_DATA_FORM);
+            gender = GetMonData(&gPlayerParty[i], MON_DATA_GENDER);
+            sStorage->partySprites[i] = CreateMonIconSprite(species, form, gender, 152,  8 * (3 * (i - 1)) + 16, 1, 12);
             count++;
         }
         else
@@ -5130,12 +5144,12 @@ static void SpriteCB_HeldMon(struct Sprite *sprite)
     sprite->y = sStorage->cursorSprite->y + sStorage->cursorSprite->y2 + 4;
 }
 
-static u16 TryLoadMonIconTiles(u16 species, u32 personality)
+static u16 TryLoadMonIconTiles(u16 species, u8 gender)
 {
     u16 i, offset;
 
     // Treat female mons as a seperate species as they may have a different icon than males
-    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL && gender == FEMALE)
         species |= 0x8000; // 1 << 15
 
     // Search icon list for this species
@@ -5165,7 +5179,7 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality)
     sStorage->numIconsPerSpecies[i]++;
     offset = 16 * i;
     species &= GENDER_MASK;
-    CpuCopy32(GetMonIconTiles(species, personality), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
+    CpuCopy32(GetMonIconTiles(species, gender), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
 
     return offset;
 }
@@ -5195,14 +5209,14 @@ static void RemoveSpeciesFromIconList(u16 species)
     }
 }
 
-static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s16 y, u8 oamPriority, u8 subpriority)
+static struct Sprite *CreateMonIconSprite(u16 species, u8 form, u8 gender, s16 x, s16 y, u8 oamPriority, u8 subpriority)
 {
     u16 tileNum;
     u8 spriteId;
     struct SpriteTemplate template = sSpriteTemplate_MonIcon;
 
-    species = GetIconSpecies(species, personality);
-    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    species = GetIconSpecies(species, form);
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL && gender == FEMALE)
     {
         template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[species].iconPalIndexFemale;
     }
@@ -5211,7 +5225,7 @@ static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s
         template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[species].iconPalIndex;
     }
 
-    tileNum = TryLoadMonIconTiles(species, personality);
+    tileNum = TryLoadMonIconTiles(species, gender);
     if (tileNum == 0xFFFF)
         return NULL;
 
@@ -6972,7 +6986,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             StringGet_Nickname(sStorage->displayMonName);
             sStorage->displayMonLevel = GetMonData(mon, MON_DATA_LEVEL);
             sStorage->displayMonMarkings = GetMonData(mon, MON_DATA_MARKINGS);
-            sStorage->displayMonPersonality = GetMonData(mon, MON_DATA_PERSONALITY);
+            sStorage->displayMonForm = GetMonData(mon, MON_DATA_FORM);
             sStorage->displayMonPalette = GetMonFrontSpritePal(mon);
             gender = GetMonGender(mon);
             sStorage->displayMonItemId = GetMonData(mon, MON_DATA_HELD_ITEM);
@@ -6985,7 +6999,6 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
         sStorage->displayMonSpecies = GetBoxMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
         if (sStorage->displayMonSpecies != SPECIES_NONE)
         {
-            bool8 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
             sanityIsBadEgg = GetBoxMonData(boxMon, MON_DATA_SANITY_IS_BAD_EGG);
             if (sanityIsBadEgg)
                 sStorage->displayMonIsEgg = TRUE;
@@ -6997,9 +7010,10 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             StringGet_Nickname(sStorage->displayMonName);
             sStorage->displayMonLevel = GetLevelFromBoxMonExp(boxMon);
             sStorage->displayMonMarkings = GetBoxMonData(boxMon, MON_DATA_MARKINGS);
-            sStorage->displayMonPersonality = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
-            sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndPersonality(sStorage->displayMonSpecies, isShiny, sStorage->displayMonPersonality);
-            gender = GetGenderFromSpeciesAndPersonality(sStorage->displayMonSpecies, sStorage->displayMonPersonality);
+            sStorage->displayMonForm = GetBoxMonData(boxMon, MON_DATA_FORM);
+            sStorage->displayMonGender = GetBoxMonData(boxMon, MON_DATA_GENDER);
+            sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndGender(sStorage->displayMonSpecies, sStorage->displayMonGender);
+            gender = GetGenderU8Value(sStorage->displayMonGender);
             sStorage->displayMonItemId = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM);
         }
     }
@@ -8534,11 +8548,12 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
 {
     u8 position = x + (IN_BOX_COLUMNS * y);
     u16 species = GetCurrentBoxMonData(position, MON_DATA_SPECIES_OR_EGG);
-    u32 personality = GetCurrentBoxMonData(position, MON_DATA_PERSONALITY);
+    u8 form = GetCurrentBoxMonData(position, MON_DATA_FORM);
+    u8 gender = GetCurrentBoxMonData(position, MON_DATA_GENDER);
 
     if (species != SPECIES_NONE)
     {
-        const u8 *iconGfx = GetMonIconPtr(species, personality);
+        const u8 *iconGfx = GetMonIconPtr(species, form, gender);
         u8 index = GetValidMonIconPalIndex(species) + 8;
 
         BlitBitmapRectToWindow4BitTo8Bit(sStorage->multiMoveWindowId,
@@ -9597,7 +9612,7 @@ void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst)
         *dst = gPokemonStoragePtr->boxes[boxId][boxPosition];
 }
 
-void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 personality, u8 otIDType, u32 otID)
+void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIDType, u32 otID)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
     {
@@ -9605,7 +9620,10 @@ void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV,
                      species,
                      level,
                      fixedIV,
-                     hasFixedPersonality, personality,
+                     hasFixedForm, fixedForm,
+                     hasFixedGender, fixedGender,
+                     hasFixedAbility, fixedAbility,
+                     hasFixedNature, fixedNature,
                      otIDType, otID);
     }
 }
@@ -10177,15 +10195,15 @@ static void UnkUtil_DmaRun(struct UnkUtilData *data)
 void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
-    bool8 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
-    u32 pid = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
+    u8 form = GetBoxMonData(boxMon, MON_DATA_FORM);
+    u8 gender = GetBoxMonData(boxMon, MON_DATA_GENDER);
 
     // Update front sprite
     sStorage->displayMonSpecies = species;
-    sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, pid);
+    sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndGender(species, gender);
     if (!sJustOpenedBag)
     {
-        LoadDisplayMonGfx(species, pid);
+        LoadDisplayMonGfx(species, form, gender);
         StartDisplayMonMosaicEffect();
 
         // Recreate icon sprite

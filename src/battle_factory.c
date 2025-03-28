@@ -394,7 +394,9 @@ static void SetRentalsToOpponentParty(void)
     {
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId = gFrontierTempParty[i];
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs = GetBoxMonData(&gEnemyParty[i].box, MON_DATA_ATK_IV, NULL);
-        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].personality = GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY, NULL);
+        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].form = GetMonData(&gEnemyParty[i], MON_DATA_FORM, NULL);
+        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].gender = GetMonData(&gEnemyParty[i], MON_DATA_GENDER, NULL);
+        gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].nature = GetMonData(&gEnemyParty[i], MON_DATA_NATURE, NULL);
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].abilityNum = GetBoxMonData(&gEnemyParty[i].box, MON_DATA_ABILITY_NUM, NULL);
         SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleFrontierHeldItems[gFacilityTrainerMons[gFrontierTempParty[i]].itemTableId]);
     }
@@ -436,7 +438,10 @@ static void SetPlayerAndOpponentParties(void)
                       gFacilityTrainerMons[monId].species,
                       monLevel,
                       ivs,
-                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].personality,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].form,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].gender,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature,
                       OT_ID_PLAYER_ID, 0);
 
             count = 0;
@@ -477,7 +482,10 @@ static void SetPlayerAndOpponentParties(void)
                       gFacilityTrainerMons[monId].species,
                       monLevel,
                       ivs,
-                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].personality,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].form,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].gender,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum,
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature,
                       OT_ID_PLAYER_ID, 0);
 
             count = 0;

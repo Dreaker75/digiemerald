@@ -154,7 +154,10 @@ struct InGameTrade {
     u8 abilityNum;
     u32 otId;
     u8 conditions[CONTEST_CATEGORIES_COUNT];
-    u32 personality;
+    u16 form:5;
+    u16 gender:2;
+    u16 nature:5;
+    u16 unused1:4;
     u16 heldItem;
     u8 mailNum;
     u8 otName[TRAINER_NAME_LENGTH + 1];
@@ -214,7 +217,9 @@ static EWRAM_DATA struct {
 static EWRAM_DATA struct {
     struct Pokemon tempMon; // Used as a temp variable when swapping Pokémon
     u32 timer;
-    u32 monPersonalities[2];
+    u8 monForm[2];
+    u8 monGender[2];
+    u16 unused1[2];
     u8 filler_70[2];
     u8 playerFinishStatus;
     u8 partnerFinishStatus;
@@ -465,7 +470,12 @@ static void CB2_CreateTradeMenu(void)
         gPaletteFade.bufferTransferDisabled = FALSE;
 
         for (i = 0; i < PARTY_SIZE; i++)
-            CreateMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+            CreateMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS,
+                      FALSE, 0,
+                      FALSE, 0,
+                      FALSE, 0,
+                      FALSE, 0,
+                      OT_ID_PLAYER_ID, 0);
 
         PrintTradeMessage(MSG_STANDBY);
         ShowBg(0);
@@ -569,7 +579,8 @@ static void CB2_CreateTradeMenu(void)
                                                          (sTradeMonSpriteCoords[i][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i][1] * 8) - 12,
                                                          1,
-                                                         GetMonData(mon, MON_DATA_PERSONALITY));
+                                                         GetMonData(mon, MON_DATA_FORM),
+                                                         GetMonData(mon, MON_DATA_GENDER));
         }
 
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PARTNER]; i++)
@@ -580,7 +591,8 @@ static void CB2_CreateTradeMenu(void)
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][1] * 8) - 12,
                                                          1,
-                                                         GetMonData(mon, MON_DATA_PERSONALITY));
+                                                         GetMonData(mon, MON_DATA_FORM),
+                                                         GetMonData(mon, MON_DATA_GENDER));
         }
         gMain.state++;
         break;
@@ -758,7 +770,8 @@ static void CB2_ReturnToTradeMenu(void)
                                                          (sTradeMonSpriteCoords[i][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i][1] * 8) - 12,
                                                          1,
-                                                         GetMonData(mon, MON_DATA_PERSONALITY));
+                                                         GetMonData(mon, MON_DATA_FORM),
+                                                         GetMonData(mon, MON_DATA_GENDER));
         }
 
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PARTNER]; i++)
@@ -769,7 +782,8 @@ static void CB2_ReturnToTradeMenu(void)
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][1] * 8) - 12,
                                                          1,
-                                                         GetMonData(mon, MON_DATA_PERSONALITY));
+                                                         GetMonData(mon, MON_DATA_FORM),
+                                                         GetMonData(mon, MON_DATA_GENDER));
         }
         gMain.state++;
         break;
@@ -2768,7 +2782,7 @@ static void LoadTradeMonPic(u8 whichParty, u8 state)
     int pos = 0;
     struct Pokemon *mon = NULL;
     u16 species = SPECIES_NONE;
-    u32 personality;
+    u8 form, gender;
 
     if (whichParty == TRADE_PLAYER)
     {
@@ -2786,13 +2800,15 @@ static void LoadTradeMonPic(u8 whichParty, u8 state)
     switch (state)
     {
     case 0:
-        personality = GetMonData(mon, MON_DATA_PERSONALITY);
+        form = GetMonData(mon, MON_DATA_FORM);
+        gender = GetMonData(mon, MON_DATA_GENDER);
 
-        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[whichParty * 2 + B_POSITION_OPPONENT_LEFT], species, personality);
+        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[whichParty * 2 + B_POSITION_OPPONENT_LEFT], species, form, gender);
 
         LoadCompressedSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
         sTradeAnim->monSpecies[whichParty] = species;
-        sTradeAnim->monPersonalities[whichParty] = personality;
+        sTradeAnim->monForm[whichParty] = form;
+        sTradeAnim->monGender[whichParty] = gender;
         break;
     case 1:
         SetMultiuseSpriteTemplateToPokemon(species, pos);
@@ -3062,10 +3078,10 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
     if (!GetMonData(mon, MON_DATA_IS_EGG))
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-        u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
+        u8 form = GetMonData(mon, MON_DATA_FORM, NULL);
         species = SpeciesToNationalPokedexNum(species);
         GetSetPokedexFlag(species, FLAG_SET_SEEN);
-        HandleSetPokedexFlag(species, FLAG_SET_CAUGHT, personality);
+        HandleSetPokedexFlag(species, FLAG_SET_CAUGHT, form);
     }
 }
 
@@ -3786,7 +3802,8 @@ static bool8 DoTradeAnim_Cable(void)
             HandleLoadSpecialPokePic(TRUE,
                                      gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_RIGHT],
                                      sTradeAnim->monSpecies[TRADE_PARTNER],
-                                     sTradeAnim->monPersonalities[TRADE_PARTNER]);
+                                     sTradeAnim->monForm[TRADE_PARTNER],
+                                     sTradeAnim->monGender[TRADE_PARTNER]);
             sTradeAnim->state++;
         }
         break;
@@ -4281,9 +4298,10 @@ static bool8 DoTradeAnim_Wireless(void)
         if (gSprites[sTradeAnim->bouncingPokeballSpriteId].callback == SpriteCallbackDummy)
         {
             HandleLoadSpecialPokePic(TRUE,
-                                      gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_RIGHT],
-                                      sTradeAnim->monSpecies[TRADE_PARTNER],
-                                      sTradeAnim->monPersonalities[TRADE_PARTNER]);
+                                     gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_RIGHT],
+                                     sTradeAnim->monSpecies[TRADE_PARTNER],
+                                     sTradeAnim->monForm[TRADE_PARTNER],
+                                     sTradeAnim->monGender[TRADE_PARTNER]);
             sTradeAnim->state++;
         }
         break;
@@ -4535,7 +4553,12 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     u8 mailNum;
     struct Pokemon *pokemon = &gEnemyParty[0];
 
-    CreateMon(pokemon, inGameTrade->species, level, USE_RANDOM_IVS, TRUE, inGameTrade->personality, OT_ID_PRESET, inGameTrade->otId);
+    CreateMon(pokemon, inGameTrade->species, level, USE_RANDOM_IVS,
+              TRUE, inGameTrade->form,
+              TRUE, inGameTrade->gender,
+              TRUE, inGameTrade->abilityNum,
+              TRUE, inGameTrade->nature,
+              OT_ID_PRESET, inGameTrade->otId);
 
     SetMonData(pokemon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
     SetMonData(pokemon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);

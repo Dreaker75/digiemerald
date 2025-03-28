@@ -6262,7 +6262,7 @@ static u8 HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, bool32 end2)
         gBattleScripting.battler = battler;
         if (end2)
         {
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
+            if (GetFlavorRelationByNature(gBattleMons[battler].nature, flavorId) < 0)
                 BattleScriptExecute(BattleScript_BerryConfuseHealEnd2);
             else
                 BattleScriptExecute(BattleScript_ItemHealHP_RemoveItemEnd2);
@@ -6270,7 +6270,7 @@ static u8 HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, bool32 end2)
         else
         {
             BattleScriptPushCursor();
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
+            if (GetFlavorRelationByNature(gBattleMons[battler].nature, flavorId) < 0)
                 gBattlescriptCurrInstr = BattleScript_BerryConfuseHealRet;
             else
                 gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItemRet;
@@ -10887,8 +10887,7 @@ static bool32 CanBeInfinitelyConfused(u32 battler)
 
 u8 GetBattlerGender(u32 battler)
 {
-    return GetGenderFromSpeciesAndPersonality(gBattleMons[battler].species,
-                                              gBattleMons[battler].personality);
+    return GetGenderU8Value(gBattleMons[battler].gender);
 }
 
 bool32 AreBattlersOfOppositeGender(u32 battler1, u32 battler2)

@@ -363,14 +363,15 @@ static void VBlankCB_ContestPainting(void)
 
 static void InitContestMonPixels(u16 species, bool8 backPic)
 {
-    const void *pal = GetMonSpritePalFromSpeciesAndPersonality(species, gContestPaintingWinner->isShiny, gContestPaintingWinner->personality);
+    const void *pal = GetMonSpritePalFromSpeciesAndGender(species, gContestPaintingWinner->gender);
     LZDecompressVram(pal, gContestPaintingMonPalette);
     if (!backPic)
     {
         HandleLoadSpecialPokePic(TRUE,
                                 gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT],
                                 species,
-                                gContestPaintingWinner->personality);
+                                gContestPaintingWinner->form,
+                                gContestPaintingWinner->gender);
         _InitContestMonPixels(gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], gContestPaintingMonPalette, (void *)gContestMonPixels);
     }
     else
@@ -378,7 +379,8 @@ static void InitContestMonPixels(u16 species, bool8 backPic)
         HandleLoadSpecialPokePic(FALSE,
                                 gMonSpritesGfxPtr->spritesGfx[B_POSITION_PLAYER_LEFT],
                                 species,
-                                gContestPaintingWinner->personality);
+                                gContestPaintingWinner->form,
+                                gContestPaintingWinner->gender);
         _InitContestMonPixels(gMonSpritesGfxPtr->spritesGfx[B_POSITION_PLAYER_LEFT], gContestPaintingMonPalette, (void *)gContestMonPixels);
     }
 }
@@ -555,7 +557,7 @@ static void DoContestPaintingImageProcessing(u8 imageEffect)
     gImageProcessingContext.canvasPixels = gContestMonPixels;
     gImageProcessingContext.canvasPalette = gContestPaintingMonPalette;
     gImageProcessingContext.paletteStart = 0;
-    gImageProcessingContext.personality = gContestPaintingWinner->personality % 256;
+    gImageProcessingContext.nature = (gContestPaintingWinner->nature * 10) % 256;
     gImageProcessingContext.columnStart = 0;
     gImageProcessingContext.rowStart = 0;
     gImageProcessingContext.columnEnd = 64;

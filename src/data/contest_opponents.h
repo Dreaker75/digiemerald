@@ -144,7 +144,8 @@ enum {
 const struct ContestWinner gDefaultContestWinners[] =
 {
     [CONTEST_WINNER_HALL_1 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_ELECTRIKE,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -153,7 +154,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_NORMAL
     },
     [CONTEST_WINNER_HALL_2 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_TROPIUS,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -162,7 +164,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_HYPER
     },
     [CONTEST_WINNER_HALL_3 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_XATU,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -171,7 +174,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_NORMAL
     },
     [CONTEST_WINNER_HALL_4 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_PLUSLE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -180,7 +184,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_MASTER
     },
     [CONTEST_WINNER_HALL_5 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_SHUPPET,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -189,7 +194,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_SUPER
     },
     [CONTEST_WINNER_HALL_6 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_ZANGOOSE,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -198,7 +204,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_HYPER
     },
     [CONTEST_WINNER_HALL_UNUSED_1 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_LOUDRED,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -207,7 +214,8 @@ const struct ContestWinner gDefaultContestWinners[] =
         .contestRank = CONTEST_RANK_HYPER
     },
     [CONTEST_WINNER_HALL_UNUSED_2 - 1] = {
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_DELCATTY,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -244,7 +252,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 3,
         .tough = 4,
         .sheen = 50,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EDITH] = {
@@ -272,7 +281,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 1,
         .tough = 2,
         .sheen = 60,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EVAN] = {
@@ -300,7 +310,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 12,
         .tough = 4,
         .sheen = 70,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KELSEY] = {
@@ -328,7 +339,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 2,
         .tough = 7,
         .sheen = 80,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MADISON] = {
@@ -356,7 +368,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 5,
         .tough = 4,
         .sheen = 90,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RAYMOND] = {
@@ -384,7 +397,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 7,
         .tough = 8,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_GRANT] = {
@@ -412,7 +426,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 2,
         .tough = 2,
         .sheen = 50,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_PAIGE] = {
@@ -440,7 +455,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 10,
         .sheen = 60,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALEC] = {
@@ -468,7 +484,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 5,
         .tough = 18,
         .sheen = 70,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SYDNEY] = {
@@ -496,7 +513,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 2,
         .tough = 7,
         .sheen = 80,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MORRIS] = {
@@ -524,7 +542,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 8,
         .tough = 1,
         .sheen = 90,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARIAH] = {
@@ -552,7 +571,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 2,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RUSSELL] = {
@@ -580,7 +600,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 2,
         .tough = 10,
         .sheen = 50,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MELANIE] = {
@@ -608,7 +629,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 5,
         .sheen = 60,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CHANCE] = {
@@ -636,7 +658,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 1,
         .tough = 1,
         .sheen = 70,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AGATHA] = {
@@ -664,7 +687,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 4,
         .sheen = 50,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BEAU] = {
@@ -692,7 +716,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 4,
         .sheen = 60,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KAY] = {
@@ -720,7 +745,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 2,
         .tough = 3,
         .sheen = 70,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CALE] = {
@@ -748,7 +774,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 5,
         .tough = 10,
         .sheen = 80,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAITLIN] = {
@@ -776,7 +803,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 3,
         .tough = 10,
         .sheen = 90,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_COLBY] = {
@@ -804,7 +832,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 1,
         .tough = 5,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KYLIE] = {
@@ -832,7 +861,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 6,
         .tough = 2,
         .sheen = 90,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LIAM] = {
@@ -860,7 +890,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 5,
         .tough = 3,
         .sheen = 80,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MILO] = {
@@ -888,7 +919,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 8,
         .tough = 10,
         .sheen = 70,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KARINA] = {
@@ -916,7 +948,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 20,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BOBBY] = {
@@ -944,7 +977,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 85,
         .tough = 35,
         .sheen = 110,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLAIRE] = {
@@ -972,7 +1006,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 25,
         .sheen = 120,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_WILLIE] = {
@@ -1000,7 +1035,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 65,
         .tough = 25,
         .sheen = 130,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CASSIDY] = {
@@ -1028,7 +1064,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 100,
         .sheen = 140,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MORGAN] = {
@@ -1056,7 +1093,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 35,
         .sheen = 150,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SUMMER] = {
@@ -1084,7 +1122,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 40,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MILES] = {
@@ -1112,7 +1151,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 10,
         .tough = 25,
         .sheen = 110,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AUDREY] = {
@@ -1140,7 +1180,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 30,
         .tough = 25,
         .sheen = 120,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AVERY] = {
@@ -1168,7 +1209,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 30,
         .sheen = 130,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ARIANA] = {
@@ -1196,7 +1238,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 75,
         .tough = 35,
         .sheen = 140,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ASHTON] = {
@@ -1224,7 +1267,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 30,
         .tough = 25,
         .sheen = 150,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SANDRA] = {
@@ -1252,7 +1296,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 25,
         .tough = 15,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CARSON] = {
@@ -1280,7 +1325,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 60,
         .tough = 20,
         .sheen = 110,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KATRINA] = {
@@ -1308,7 +1354,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 15,
         .tough = 75,
         .sheen = 120,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LUKE] = {
@@ -1336,7 +1383,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 30,
         .tough = 20,
         .sheen = 100,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RAUL] = {
@@ -1364,7 +1412,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 20,
         .tough = 20,
         .sheen = 110,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JADA] = {
@@ -1392,7 +1441,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 20,
         .tough = 20,
         .sheen = 120,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ZEEK] = {
@@ -1420,7 +1470,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 30,
         .tough = 45,
         .sheen = 130,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DIEGO] = {
@@ -1448,7 +1499,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 20,
         .tough = 45,
         .sheen = 140,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALIYAH] = {
@@ -1476,7 +1528,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 20,
         .tough = 20,
         .sheen = 150,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NATALIA] = {
@@ -1504,7 +1557,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 25,
         .tough = 25,
         .sheen = 140,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEVIN] = {
@@ -1532,7 +1586,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 20,
         .tough = 20,
         .sheen = 130,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_TYLOR] = {
@@ -1560,7 +1615,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 45,
         .tough = 20,
         .sheen = 120,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RONNIE] = {
@@ -1588,7 +1644,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 100,
         .tough = 90,
         .sheen = 200,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLAUDIA] = {
@@ -1616,7 +1673,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 70,
         .sheen = 210,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ELIAS] = {
@@ -1644,7 +1702,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 70,
         .tough = 70,
         .sheen = 220,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JADE] = {
@@ -1672,7 +1731,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 75,
         .tough = 40,
         .sheen = 230,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FRANCIS] = {
@@ -1700,7 +1760,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 70,
         .tough = 70,
         .sheen = 240,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALISHA] = {
@@ -1728,7 +1789,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 80,
         .tough = 100,
         .sheen = 250,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SAUL] = {
@@ -1756,7 +1818,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 70,
         .tough = 90,
         .sheen = 200,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FELICIA] = {
@@ -1784,7 +1847,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 50,
         .tough = 65,
         .sheen = 210,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EMILIO] = {
@@ -1812,7 +1876,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 60,
         .tough = 50,
         .sheen = 220,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KARLA] = {
@@ -1840,7 +1905,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 45,
         .tough = 70,
         .sheen = 230,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DARRYL] = {
@@ -1868,7 +1934,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 100,
         .sheen = 240,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SELENA] = {
@@ -1896,7 +1963,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 50,
         .tough = 30,
         .sheen = 250,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NOEL] = {
@@ -1924,7 +1992,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 50,
         .tough = 160,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LACEY] = {
@@ -1952,7 +2021,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 70,
         .tough = 50,
         .sheen = 210,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CORBIN] = {
@@ -1980,7 +2050,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 35,
         .sheen = 220,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_GRACIE] = {
@@ -2008,7 +2079,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 100,
         .tough = 80,
         .sheen = 200,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_COLTIN] = {
@@ -2036,7 +2108,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 100,
         .sheen = 210,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ELLIE] = {
@@ -2064,7 +2137,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 50,
         .tough = 100,
         .sheen = 220,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARCUS] = {
@@ -2092,7 +2166,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 95,
         .sheen = 230,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KIARA] = {
@@ -2120,7 +2195,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 50,
         .tough = 100,
         .sheen = 240,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BRYCE] = {
@@ -2148,7 +2224,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 80,
         .tough = 80,
         .sheen = 250,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JAMIE] = {
@@ -2176,7 +2253,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 110,
         .sheen = 240,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JORGE] = {
@@ -2204,7 +2282,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 25,
         .tough = 80,
         .sheen = 230,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEVON] = {
@@ -2232,7 +2311,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 40,
         .sheen = 220,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JUSTINA] = {
@@ -2260,7 +2340,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 160,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RALPH] = {
@@ -2288,7 +2369,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 150,
         .tough = 160,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ROSA] = {
@@ -2316,7 +2398,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 185,
         .tough = 60,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KEATON] = {
@@ -2344,7 +2427,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 110,
         .tough = 150,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MAYRA] = {
@@ -2372,7 +2456,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 30,
         .tough = 90,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LAMAR] = {
@@ -2400,7 +2485,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 230,
         .tough = 80,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AUBREY] = {
@@ -2428,7 +2514,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 130,
         .tough = 40,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NIGEL] = {
@@ -2456,7 +2543,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 150,
         .tough = 160,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAMILLE] = {
@@ -2484,7 +2572,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 130,
         .tough = 170,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEON] = {
@@ -2512,7 +2601,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 75,
         .tough = 100,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JANELLE] = {
@@ -2540,7 +2630,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 40,
         .tough = 190,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_HEATH] = {
@@ -2568,7 +2659,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 240,
         .tough = 140,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SASHA] = {
@@ -2596,7 +2688,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 35,
         .tough = 50,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FRANKIE] = {
@@ -2624,7 +2717,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 115,
         .tough = 120,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_HELEN] = {
@@ -2652,7 +2746,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 220,
         .tough = 210,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAMILE] = {
@@ -2680,7 +2775,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 80,
         .tough = 180,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARTIN] = {
@@ -2708,7 +2804,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 130,
         .tough = 130,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SERGIO] = {
@@ -2736,7 +2833,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 120,
         .tough = 150,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KAILEY] = {
@@ -2764,7 +2862,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 170,
         .tough = 80,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_PERLA] = {
@@ -2792,7 +2891,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 150,
         .tough = 120,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLARA] = {
@@ -2820,7 +2920,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 120,
         .tough = 80,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JAKOB] = {
@@ -2848,7 +2949,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 80,
         .tough = 150,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_TREY] = {
@@ -2876,7 +2978,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 110,
         .tough = 170,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LANE] = {
@@ -2904,7 +3007,8 @@ const struct ContestPokemon gContestOpponents[] =
         .smart = 80,
         .tough = 190,
         .sheen = 255,
-        .personality = 0,
+        .form = 0,
+        .gender = 0,
         .otId = CONTEST_AI_TRAINER_ID,
     }
 };

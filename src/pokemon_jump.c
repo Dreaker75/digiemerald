@@ -157,10 +157,11 @@ enum {
 
 struct PokemonJump_MonInfo
 {
-    u16 isShiny:1;
+    u16 unused1:1;
     u16 species:15;
     u32 otId;
-    u32 personality;
+    u8 form;
+    u8 gender;
 };
 
 struct PokemonJump_Player
@@ -933,8 +934,8 @@ static void InitJumpMonInfo(struct PokemonJump_MonInfo *monInfo, struct Pokemon 
 {
     monInfo->species = GetMonData(mon, MON_DATA_SPECIES);
     monInfo->otId = GetMonData(mon, MON_DATA_OT_ID);
-    monInfo->isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-    monInfo->personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    monInfo->gender = GetMonData(mon, MON_DATA_GENDER);
+    monInfo->form = GetMonData(mon, MON_DATA_FORM);
 }
 
 static void VBlankCB_PokemonJump(void)
@@ -3003,14 +3004,15 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
         HandleLoadSpecialPokePic(TRUE,
                                 buffer,
                                 monInfo->species,
-                                monInfo->personality);
+                                monInfo->form,
+                                monInfo->gender);
 
         spriteSheet.data = buffer;
         spriteSheet.tag = multiplayerId;
         spriteSheet.size = MON_PIC_SIZE;
         LoadSpriteSheet(&spriteSheet);
 
-        spritePalette.data = GetMonSpritePalFromSpeciesAndPersonality(monInfo->species, monInfo->isShiny, monInfo->personality);
+        spritePalette.data = GetMonSpritePalFromSpeciesAndGender(monInfo->species, monInfo->gender);
         spritePalette.tag = multiplayerId;
         LoadCompressedSpritePalette(&spritePalette);
 
@@ -4201,9 +4203,10 @@ static void Task_UpdateBonus(u8 taskId)
 struct MonInfoPacket
 {
     u8 id;
-    u16 isShiny:1;
+    u16 unused1:1;
     u16 species:15;
-    u32 personality;
+    u8 form;
+    u8 gender;
     u32 otId;
 };
 
@@ -4211,10 +4214,10 @@ static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
 {
     struct MonInfoPacket packet;
     packet.id = PACKET_MON_INFO,
-    packet.isShiny = monInfo->isShiny,
+    packet.gender = monInfo->gender,
     packet.species = monInfo->species,
     packet.otId = monInfo->otId,
-    packet.personality = monInfo->personality,
+    packet.form = monInfo->form,
     Rfu_SendPacket(&packet);
 }
 
@@ -4229,9 +4232,9 @@ static bool32 RecvPacket_MonInfo(int multiplayerId, struct PokemonJump_MonInfo *
     if (packet.id == PACKET_MON_INFO)
     {
         monInfo->species = packet.species;
-        monInfo->isShiny = packet.isShiny;
+        monInfo->gender = packet.gender;
         monInfo->otId = packet.otId;
-        monInfo->personality = packet.personality;
+        monInfo->form = packet.form;
         return TRUE;
     }
 

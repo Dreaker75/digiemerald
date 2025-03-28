@@ -52,8 +52,6 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u8 nickBuffer[20];
     CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainer1, TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT(IsMonShiny(&testParty[0]));
-    EXPECT(!IsMonShiny(&testParty[1]));
 
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES, 0) == SPECIES_WOBBUFFET);
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES, 0) == SPECIES_WOBBUFFET);
@@ -126,18 +124,4 @@ TEST("CreateNPCTrainerPartyForTrainer generates different personalities for diff
     CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainer1, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(testParty[0].box.personality != testParty[1].box.personality);
     Free(testParty);
-}
-
-TEST("ModifyPersonalityForNature can set any nature")
-{
-    u32 personality = 0, nature = 0, j = 0, k = 0;
-    for (j = 0; j < 64; j++)
-    {
-        for (k = 0; k < NUM_NATURES; k++)
-        {
-            PARAMETRIZE { personality = Random32(); nature = k; }
-        }
-    }
-    ModifyPersonalityForNature(&personality, nature);
-    EXPECT_EQ(GetNatureFromPersonality(personality), nature);
 }

@@ -718,24 +718,24 @@ static void HandleInitBackgrounds(void)
 static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
 {
     u16 species;
-    u32 personality;
-    bool32 isShiny;
+    u8 form, gender;
 
     switch (sPokeblockFeed->loadGfxState)
     {
     case 0:
         // Load mon gfx
         species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-        personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], species, personality);
+        form = GetMonData(mon, MON_DATA_FORM);
+        gender = GetMonData(mon, MON_DATA_GENDER);
+        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], species, form, gender);
         sPokeblockFeed->loadGfxState++;
         break;
     case 1:
         // Load mon palette
         species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-        personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        form = GetMonData(mon, MON_DATA_FORM);
+        gender = GetMonData(mon, MON_DATA_GENDER);
+        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndGender(species, gender), species);
         SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_OPPONENT_LEFT);
         sPokeblockFeed->loadGfxState++;
         break;

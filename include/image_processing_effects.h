@@ -43,7 +43,7 @@ struct ImageProcessingContext
     u8 rowEnd;
     u8 canvasWidth;
     u8 canvasHeight;
-    u8 personality;
+    u8 nature;
 };
 
 void ApplyImageProcessingEffects(struct ImageProcessingContext *);

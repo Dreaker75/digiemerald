@@ -12,7 +12,8 @@
 
 // Property labels for Get(Box)MonData / Set(Box)MonData
 enum {
-    MON_DATA_PERSONALITY,
+    MON_DATA_FORM,  // For stuff like Unown Letters
+    MON_DATA_GENDER,
     MON_DATA_STATUS,
     MON_DATA_OT_ID,
     MON_DATA_LANGUAGE,
@@ -23,8 +24,7 @@ enum {
     MON_DATA_MARKINGS,
     MON_DATA_CHECKSUM,
     MON_DATA_HP,
-    MON_DATA_IS_SHINY,
-    MON_DATA_HIDDEN_NATURE,
+    MON_DATA_NATURE,
     MON_DATA_HP_LOST,
     MON_DATA_ENCRYPT_SEPARATOR,
     MON_DATA_NICKNAME,
@@ -236,23 +236,24 @@ union PokemonSubstruct
 
 struct BoxPokemon
 {
-    u32 personality;
     u32 otId;
     u8 nickname[min(10, POKEMON_NAME_LENGTH)];
     u8 language:3;
-    u8 hiddenNatureModifier:5; // 31 natures.
+    u8 nature:5; // 31 natures.
     u8 isBadEgg:1;
     u8 hasSpecies:1;
     u8 isEgg:1;
     u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set.
-    u8 unused_13:4;
+    u8 gender:2;
+    u8 unused1:2;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings:4;
     u8 compressedStatus:4;
     u16 checksum;
+    u8 form:5;
+    u8 unused2:3;
     u16 hpLost:14; // 16383 HP.
-    u16 shinyModifier:1;
-    u16 unused_1E:1;
+    u16 unused3:2;
 
     union
     {
@@ -333,12 +334,14 @@ struct BattlePokemon
     /*0x3C*/ u8 ppBonuses;
     /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
     /*0x45*/ u32 experience;
-    /*0x49*/ u32 personality;
+    /*0x49*/ u16 form:5;
+    /*0x49*/ u16 gender:2;
+    /*0x5A*/ u16 nature:5;
+    /*0x49*/ u16 unused:4;
     /*0x4D*/ u32 status1;
     /*0x51*/ u32 status2;
     /*0x55*/ u32 otId;
     /*0x59*/ u8 metLevel;
-    /*0x5A*/ bool8 isShiny;
 };
 
 struct Evolution
@@ -594,15 +597,6 @@ extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
 
 #define NUM_UNOWN_FORMS 28
 
-#define GET_UNOWN_LETTER(personality) ((   \
-      (((personality) & 0x03000000) >> 18) \
-    | (((personality) & 0x00030000) >> 12) \
-    | (((personality) & 0x00000300) >> 6)  \
-    | (((personality) & 0x00000003) >> 0)  \
-) % NUM_UNOWN_FORMS)
-
-#define GET_SHINY_VALUE(otId, personality) (HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality))
-
 extern u8 gPlayerPartyCount;
 extern struct Pokemon gPlayerParty[PARTY_SIZE];
 extern u8 gEnemyPartyCount;
@@ -628,12 +622,11 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIdType, u32 fixedOtId);
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIdType, u32 fixedOtId);
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature);
-void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter);
-void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level);
-void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality);
+void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 form, u8 gender, u8 nature);
+void CreateMonWithIVsFormGenderAbilityNature(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u8 form, u8 gender, u8 ability, u8 nature);
 void CreateMonWithIVsOTID(struct Pokemon *mon, u16 species, u8 level, u8 *ivs, u32 otId);
 void CreateMonWithEVSpread(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 evSpread);
 void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
@@ -665,9 +658,10 @@ u8 CountAliveMonsInBattle(u8 caseId, u32 battler);
 u8 GetDefaultMoveTarget(u8 battlerId);
 u8 GetMonGender(struct Pokemon *mon);
 u8 GetBoxMonGender(struct BoxPokemon *boxMon);
-u8 GetGenderFromSpeciesAndPersonality(u16 species, u32 personality);
-bool32 IsPersonalityFemale(u16 species, u32 personality);
-u32 GetUnownSpeciesId(u32 personality);
+u8 GetGenderU8Value(u8 gender);
+u8 GetGenderFromSpeciesOrRandom(u16 species);
+u8 GetRandomAbility(u16 species);
+u32 GetUnownSpeciesId(u8 form);
 void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerSpriteId, u8 battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, u8 battlerPosition);
@@ -721,7 +715,6 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battlerId);
 u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit);
 u8 *UseStatIncreaseItem(u16 itemId);
 u8 GetNature(struct Pokemon *mon);
-u8 GetNatureFromPersonality(u32 personality);
 u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem, struct Pokemon *tradePartner);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(u16 nationalNum);
@@ -729,7 +722,7 @@ u16 NationalToHoennOrder(u16 nationalNum);
 u16 SpeciesToNationalPokedexNum(u16 species);
 u16 SpeciesToHoennPokedexNum(u16 species);
 u16 HoennToNationalOrder(u16 hoennNum);
-void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
+void DrawSpindaSpots(u8 *dest, bool32 isSecondFrame);
 void EvolutionRenameMon(struct Pokemon *mon, u16 oldSpecies, u16 newSpecies);
 u8 GetPlayerFlankId(void);
 u16 GetLinkTrainerFlankId(u8 id);
@@ -756,11 +749,11 @@ void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 void CreateTask_PlayMapChosenOrBattleBGM(u16 songId);
 const u32 *GetMonFrontSpritePal(struct Pokemon *mon);
-const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
+const u32 *GetMonSpritePalFromSpeciesAndGender(u16 species, u8 gender);
 bool8 IsMoveHM(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
-s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
+s8 GetFlavorRelationByNature(u8 nature, u8 flavor);
 bool8 IsTradedMon(struct Pokemon *mon);
 bool8 IsOtherTrainer(u32 otId, u8 *otName);
 void MonRestorePP(struct Pokemon *mon);
@@ -777,7 +770,7 @@ void BattleAnimateBackSprite(struct Sprite *sprite, u16 species);
 u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId);
 u16 FacilityClassToPicIndex(u16 facilityClass);
 u16 PlayerGenderToFrontTrainerPicId(u8 playerGender);
-void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality);
+void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u8 unownLetter);
 bool8 HasTwoFramesAnimation(u16 species);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
@@ -793,7 +786,6 @@ bool32 TryFormChange(u32 monId, u32 side, u16 method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, u16 method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);
-void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
 u8 CalculatePartyCount(struct Pokemon *party);
 u16 SanitizeSpeciesId(u16 species);
 bool32 IsSpeciesEnabled(u16 species);

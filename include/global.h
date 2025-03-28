@@ -187,8 +187,7 @@ struct Pokedex
     /*0x01*/ u8 mode;
     /*0x02*/ u8 nationalMagic; // must equal 0xDA in order to have National mode
     /*0x03*/ u8 unknown2;
-    /*0x04*/ u32 unownPersonality; // set when you first see Unown
-    /*0x08*/ u32 spindaPersonality; // set when you first see Spinda
+    /*0x04*/ u8 unownForm; // set when you first see Unown
     /*0x0C*/ u32 unknown3;
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2 == FALSE
     /*0x10*/ u8 filler[0x68]; // Previously Dex Flags, feel free to remove.
@@ -284,7 +283,11 @@ struct BattleTowerPokemon
     u32 spDefenseIV:5;
     u32 gap:1;
     u32 abilityNum:1;
-    u32 personality;
+    u8 form:5;
+    u8 gender:2;
+    u8 unused1:1;
+    u8 nature:5;
+    u8 unused2:3;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
     u8 friendship;
 };
@@ -341,7 +344,10 @@ struct RentalMon
 {
     u16 monId;
     //u8 padding1[2];
-    u32 personality;
+    u16 form:5;
+    u16 gender:2;
+    u16 nature:5;
+    u16 unused1:4;
     u8 ivs;
     u8 abilityNum;
     //u8 padding2[2];
@@ -538,7 +544,10 @@ extern struct SaveBlock2 *gSaveBlock2Ptr;
 
 struct SecretBaseParty
 {
-    u32 personality[PARTY_SIZE];
+    u8 form[PARTY_SIZE];
+    u8 gender[PARTY_SIZE];
+    u8 nature[PARTY_SIZE];
+    u8 ability[PARTY_SIZE];
     u16 moves[PARTY_SIZE * MAX_MON_MOVES];
     u16 species[PARTY_SIZE];
     u16 heldItems[PARTY_SIZE];
@@ -600,7 +609,10 @@ struct Pokeblock
 struct Roamer
 {
     /*0x00*/ u32 ivs;
-    /*0x04*/ u32 personality;
+    /*0x04*/ u8 form;
+    /*0x04*/ u8 gender;
+    /*0x04*/ u8 ability;
+    /*0x04*/ u8 nature;
     /*0x08*/ u16 species;
     /*0x0A*/ u16 hp;
     /*0x0C*/ u8 level;
@@ -744,14 +756,17 @@ struct RecordMixingGift
 
 struct ContestWinner
 {
-    u32 personality;
+    u8 form:5;
+    u8 gender:2;
+    u8 unused1:1;
+    u8 nature;
     u32 trainerId;
     u16 species;
     u8 contestCategory;
     u8 monName[POKEMON_NAME_LENGTH + 1];
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
     u8 contestRank:7;
-    bool8 isShiny:1;
+    bool8 unused4:1;
     //u8 padding;
 };
 
@@ -783,7 +798,9 @@ struct DaycareMon
 struct DayCare
 {
     struct DaycareMon mons[DAYCARE_MON_COUNT];
-    u32 offspringPersonality;
+    u8 offspringNature:5;
+    u8 isEggPending:1;
+    u8 unused1:2;
     u8 stepCounter;
     //u8 padding[3];
 };
@@ -998,10 +1015,10 @@ struct SaveBlock1
     /*0x496*/ u16 registeredItem; // registered for use with SELECT button
     /*0x498*/ struct ItemSlot pcItems[PC_ITEMS_COUNT];
     /*0x560*/ struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
-    /*0x5D8*/ struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
     /*0x650*/ struct ItemSlot bagPocket_XAntibodies[BAG_XANTIBODIES_COUNT];
-    /*0x690*/ struct ItemSlot bagPocket_TMHM[BAG_TMHM_COUNT];
     /*0x790*/ struct ItemSlot bagPocket_Berries[BAG_BERRIES_COUNT];
+    /*0x690*/ struct ItemSlot bagPocket_TMHM[BAG_TMHM_COUNT];
+    /*0x5D8*/ struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
     /*0x848*/ struct Pokeblock pokeblocks[POKEBLOCKS_COUNT];
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1 == FALSE
     /*0x988*/ u8 filler1[0x34]; // Previously Dex Flags, feel free to remove.

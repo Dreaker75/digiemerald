@@ -5157,11 +5157,6 @@ static void AI_Flee(void)
     AI_THINKING_STRUCT->aiAction |= (AI_ACTION_DONE | AI_ACTION_FLEE | AI_ACTION_DO_NOT_ATTACK);
 }
 
-static void AI_Watch(void)
-{
-    AI_THINKING_STRUCT->aiAction |= (AI_ACTION_DONE | AI_ACTION_WATCH | AI_ACTION_DO_NOT_ATTACK);
-}
-
 // Roaming pokemon logic
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {

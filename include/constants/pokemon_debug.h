@@ -18,8 +18,8 @@
 #define OPTIONS_ARROW_2_X 236
 #define OPTIONS_ARROW_Y 119
 
-#define GENDER_MALE 0
-#define GENDER_FEMALE 1
+#define MALE 0
+#define FEMALE 1
 #define MON_PIC_BACK 0
 #define MON_PIC_FRONT 1
 

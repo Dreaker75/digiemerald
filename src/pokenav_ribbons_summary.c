@@ -401,7 +401,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     StringGet_Nickname(nick);
 }
 
-static void GetMonSpeciesPersonalityShiny(u16 *species, u32 *personality, bool8 *isShiny)
+static void GetMonSpeciesFormGender(u16 *species, u8 *form, u8 *gender)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;
@@ -412,16 +412,16 @@ static void GetMonSpeciesPersonalityShiny(u16 *species, u32 *personality, bool8 
         // Get info for party mon
         struct Pokemon *mon = &gPlayerParty[monInfo->monId];
         *species = GetMonData(mon, MON_DATA_SPECIES);
-        *personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        *isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+        *form = GetMonData(mon, MON_DATA_FORM);
+        *gender = GetMonData(mon, MON_DATA_GENDER);
     }
     else
     {
         // Get info for PC box mon
         struct BoxPokemon *boxMon = GetBoxedMonPtr(monInfo->boxId, monInfo->monId);
         *species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
-        *personality = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
-        *isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
+        *form = GetBoxMonData(boxMon, MON_DATA_FORM);
+        *gender = GetBoxMonData(boxMon, MON_DATA_GENDER);
     }
 }
 
@@ -941,10 +941,10 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
 static void ResetSpritesAndDrawMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u16 species;
-    u32 personality;
-    bool8 isShiny;
+    // Need to pass a value to the function, but is not used otherwise
+    u8 value;
 
-    GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
+    GetMonSpeciesFormGender(&species, &value, &value);
     ResetAllPicSprites();
     menu->monSpriteId = DrawRibbonsMonFrontPic(MON_SPRITE_X_ON, MON_SPRITE_Y);
     PokenavFillPalette(15, 0);
@@ -961,11 +961,10 @@ static void DestroyRibbonsMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 static u16 DrawRibbonsMonFrontPic(s32 x, s32 y)
 {
     u16 species, spriteId;
-    u32 personality;
-    bool8 isShiny;
+    u8 form, gender;
 
-    GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
-    spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, MON_SPRITE_X_ON, MON_SPRITE_Y, 15, TAG_NONE);
+    GetMonSpeciesFormGender(&species, &form, &gender);
+    spriteId = CreateMonPicSprite(species, form, gender, TRUE, MON_SPRITE_X_ON, MON_SPRITE_Y, 15, TAG_NONE);
     gSprites[spriteId].oam.priority = 0;
     return spriteId;
 }

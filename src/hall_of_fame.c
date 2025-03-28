@@ -41,8 +41,10 @@
 struct HallofFameMon
 {
     u32 tid;
-    u32 personality;
-    u16 isShiny:1;
+    u8 form;
+    u8 gender;
+    u16 padding;
+    u16 unused:1;
     u16 species:15;
     u8 lvl;
     u8 nickname[POKEMON_NAME_LENGTH];
@@ -336,8 +338,8 @@ static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/japanese_hof.4bpp
 static const struct HallofFameMon sDummyFameMon =
 {
     .tid = 0x3EA03EA,
-    .personality = 0,
-    .isShiny = FALSE,
+    .form = 0,
+    .gender = FEMALE,
     .species = SPECIES_NONE,
     .lvl = 0,
     .nickname = {0}
@@ -449,8 +451,8 @@ static void Task_Hof_InitMonData(u8 taskId)
         {
             sHofMonPtr->mon[i].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             sHofMonPtr->mon[i].tid = GetMonData(&gPlayerParty[i], MON_DATA_OT_ID);
-            sHofMonPtr->mon[i].isShiny = GetMonData(&gPlayerParty[i], MON_DATA_IS_SHINY);
-            sHofMonPtr->mon[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
+            sHofMonPtr->mon[i].gender = GetMonData(&gPlayerParty[i], MON_DATA_GENDER);
+            sHofMonPtr->mon[i].form = GetMonData(&gPlayerParty[i], MON_DATA_FORM);
             sHofMonPtr->mon[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
             GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, nickname);
             for (j = 0; j < POKEMON_NAME_LENGTH; j++)
@@ -461,8 +463,8 @@ static void Task_Hof_InitMonData(u8 taskId)
         {
             sHofMonPtr->mon[i].species = SPECIES_NONE;
             sHofMonPtr->mon[i].tid = 0;
-            sHofMonPtr->mon[i].isShiny = FALSE;
-            sHofMonPtr->mon[i].personality = 0;
+            sHofMonPtr->mon[i].gender = 0;
+            sHofMonPtr->mon[i].form = 0;
             sHofMonPtr->mon[i].lvl = 0;
             sHofMonPtr->mon[i].nickname[0] = EOS;
         }
@@ -587,7 +589,7 @@ static void Task_Hof_DisplayMon(u8 taskId)
     if (currMon->species == SPECIES_EGG)
         destY += 10;
 
-    spriteId = CreateMonPicSprite_Affine(currMon->species, currMon->isShiny, currMon->personality, MON_PIC_AFFINE_FRONT, startX, startY, currMonId, TAG_NONE);
+    spriteId = CreateMonPicSprite_Affine(currMon->species, currMon->form, currMon->gender, MON_PIC_AFFINE_FRONT, startX, startY, currMonId, TAG_NONE);
     gSprites[spriteId].tDestinationX = destX;
     gSprites[spriteId].tDestinationY = destY;
     gSprites[spriteId].data[0] = 0;
@@ -933,7 +935,7 @@ static void Task_HofPC_DrawSpritesPrintText(u8 taskId)
             if (currMon->species == SPECIES_EGG)
                 posY += 10;
 
-            spriteId = CreateMonPicSprite(currMon->species, currMon->isShiny, currMon->personality, TRUE, posX, posY, i, TAG_NONE);
+            spriteId = CreateMonPicSprite(currMon->species, currMon->form, currMon->gender, TRUE, posX, posY, i, TAG_NONE);
             gSprites[spriteId].oam.priority = 1;
             gTasks[taskId].tMonSpriteId(i) = spriteId;
         }
@@ -1175,7 +1177,7 @@ static void HallOfFame_PrintMonInfo(struct HallofFameMon* currMon, u8 unused1, u
 
         if (currMon->species != SPECIES_NIDORAN_M && currMon->species != SPECIES_NIDORAN_F)
         {
-            switch (GetGenderFromSpeciesAndPersonality(currMon->species, currMon->personality))
+            switch (GetGenderU8Value(currMon->gender))
             {
             case MON_MALE:
                 stringPtr[0] = CHAR_MALE;

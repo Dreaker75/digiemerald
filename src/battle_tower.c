@@ -3016,7 +3016,7 @@ static void FillPartnerParty(u16 trainerId)
 {
     s32 i, j, k;
     u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;
-    u32 ivs, level, personality;
+    u32 ivs, level;
     u32 friendship;
     u16 monId;
     u32 otID;
@@ -3056,17 +3056,19 @@ static void FillPartnerParty(u16 trainerId)
             else
                 otID = ((firstIdPart % 72) * 1000) + ((secondIdPart % 23) * 10) + (thirdIdPart % 37) % 65536;
 
-            personality = Random32();
-            if (partyData[i].gender == TRAINER_MON_MALE)
-                personality = (personality & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[i].species);
-            else if (partyData[i].gender == TRAINER_MON_FEMALE)
-                personality = (personality & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[i].species);
-            if (partyData[i].nature != 0)
-                ModifyPersonalityForNature(&personality, partyData[i].nature - 1);
+            u8 hasFixedAbility = partyData[i].ability != ABILITY_NONE;
+            u8 ability = partyData[i].ability;
+            if (ability >= ARRAY_COUNT(gSpeciesInfo[partyData[i].species].abilities))
+            {
+                ability = 0;
+            }
 
-            CreateMon(&gPlayerParty[i + 3], partyData[i].species, partyData[i].lvl, 0, TRUE, personality, OT_ID_PRESET, otID);
-            j = partyData[i].isShiny;
-            SetMonData(&gPlayerParty[i + 3], MON_DATA_IS_SHINY, &j);
+            CreateMon(&gPlayerParty[i + 3], partyData[i].species, partyData[i].lvl, 0,
+                      TRUE, partyData[i].form,
+                      TRUE, partyData[i].gender,
+                      hasFixedAbility, ability,
+                      (partyData[i].nature != 0 ? TRUE : FALSE), partyData[i].nature,
+                      OT_ID_PRESET, otID);
             SetMonData(&gPlayerParty[i + 3], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
             CustomTrainerPartyAssignMoves(&gPlayerParty[i + 3], &partyData[i]);
 
@@ -3080,18 +3082,8 @@ static void FillPartnerParty(u16 trainerId)
                 SetMonData(&gPlayerParty[i + 3], MON_DATA_SPDEF_EV, &(partyData[i].ev[4]));
                 SetMonData(&gPlayerParty[i + 3], MON_DATA_SPEED_EV, &(partyData[i].ev[5]));
             }
-            if (partyData[i].ability != ABILITY_NONE)
-            {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
-                u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-                for (j = 0; j < maxAbilities; j++)
-                {
-                    if (speciesInfo->abilities[j] == partyData[i].ability)
-                        break;
-                }
-                if (j < maxAbilities)
-                    SetMonData(&gPlayerParty[i + 3], MON_DATA_ABILITY_NUM, &j);
-            }
+
+            SetMonData(&gPlayerParty[i + 3], MON_DATA_ABILITY_NUM, &ability);
             SetMonData(&gPlayerParty[i + 3], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
             if (partyData[i].nickname != NULL)
             {

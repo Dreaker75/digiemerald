@@ -155,9 +155,6 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
 
-static EWRAM_DATA bool8 sAckBallUseBtn = FALSE;
-static EWRAM_DATA bool8 sBallSwapped = FALSE;
-
 void SetControllerToPlayer(u32 battler)
 {
     gBattlerControllerEndFuncs[battler] = PlayerBufferExecCompleted;

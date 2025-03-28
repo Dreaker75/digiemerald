@@ -4332,12 +4332,10 @@ static void ResetUnionRoomTrade(struct UnionRoomTrade *trade)
 {
     trade->state = URTRADE_STATE_NONE;
     trade->type = 0;
-    trade->playerPersonality = 0;
     trade->playerSpecies = SPECIES_NONE;
     trade->playerLevel = 0;
     trade->species = SPECIES_NONE;
     trade->level = 0;
-    trade->personality = 0;
 }
 
 void Script_ResetUnionRoomTrade(void)
@@ -4349,7 +4347,6 @@ static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade *trad
 {
     trade->playerSpecies = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
     trade->playerLevel = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-    trade->playerPersonality = GetMonData(&gPlayerParty[monId], MON_DATA_PERSONALITY);
     if (trade->playerSpecies == SPECIES_EGG)
         return TRUE;
     else
@@ -4360,35 +4357,27 @@ static void RegisterTradeMon(u32 monId, struct UnionRoomTrade *trade)
 {
     trade->species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
     trade->level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-    trade->personality = GetMonData(&gPlayerParty[monId], MON_DATA_PERSONALITY);
 }
 
 static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade *trade, u8 multiplayerId)
 {
     u16 response = 0;
     u16 species;
-    u32 personality;
-    u32 cur_personality;
     u16 cur_species;
     s32 i;
 
     if (multiplayerId == 0)
     {
         species = trade->playerSpecies;
-        personality = trade->playerPersonality;
     }
     else
     {
         species = trade->species;
-        personality = trade->personality;
     }
 
     // Find party position by comparing to personality and species
     for (i = 0; i < gPlayerPartyCount; i++)
     {
-        cur_personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-        if (cur_personality != personality)
-            continue;
         cur_species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
         if (cur_species != species)
             continue;

@@ -65,9 +65,10 @@ struct TrainerMon
     u8 lvl;
     u8 ball;
     u8 friendship;
-    u8 nature:5;
-    bool8 gender:2;
-    bool8 isShiny:1;
+    u16 form:5;
+    u16 nature:5;
+    u16 gender:2;
+    u16 unused1:4;
     u8 dynamaxLevel:4;
     bool8 gigantamaxFactor:1;
     bool8 shouldDynamax:1;

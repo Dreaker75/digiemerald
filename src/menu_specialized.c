@@ -1075,11 +1075,11 @@ void GetConditionMenuMonGfx(void *tilesDst, void *palDst, u16 boxId, u16 monId, 
     if (partyId != numMons)
     {
         u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES_OR_EGG, NULL);
-        bool8 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
-        u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
+        u8 gender = GetBoxOrPartyMonData(boxId, monId, MON_DATA_GENDER, NULL);
+        u8 form = GetBoxOrPartyMonData(boxId, monId, MON_DATA_FORM, NULL);
 
-        LoadSpecialPokePic(tilesDst, species, personality, TRUE);
-        LZ77UnCompWram(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), palDst);
+        LoadSpecialPokePic(tilesDst, species, form, gender, TRUE);
+        LZ77UnCompWram(GetMonSpritePalFromSpeciesAndGender(species, gender), palDst);
     }
 }
 
