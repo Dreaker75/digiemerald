@@ -4570,8 +4570,6 @@ void DrawSpindaSpots(u8 *dest, bool32 isSecondFrame)
 
             y++;
         }
-
-        personality >>= 8;
     }
 }
 
