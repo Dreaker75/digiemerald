@@ -600,7 +600,7 @@ static void CreateEvolution(u16 evoSpecies)
 {
     u32 data = 0;
 
-    if (evoSpecies == SPECIES_NONE)
+    if (evoSpecies == SPECIES_NONE || GetSetPokedexFlag(SpeciesToNationalPokedexNum(evoSpecies), FLAG_GET_CAUGHT))
         return;
 
     s32 i;
@@ -838,6 +838,7 @@ static void Task_EvolutionScene(u8 taskId)
     case EVOSTATE_TRY_LEARN_MOVE:
         if (!IsTextPrinterActive(0))
         {
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
             var = MonTryLearningNewMoveEvolution(mon, gTasks[taskId].tLearnsFirstMove);
             if (var != MOVE_NONE && !gTasks[taskId].tEvoWasStopped)
             {
@@ -863,9 +864,12 @@ static void Task_EvolutionScene(u8 taskId)
             }
             else // no move to learn, or evolution was canceled
             {
+#endif
                 BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
                 gTasks[taskId].tState++;
+#if EVOLUTION_TYPE == POKEMON_EVOLUTIONS
             }
+#endif
         }
         break;
     case EVOSTATE_END:
