@@ -65,7 +65,6 @@ struct SpeciesItem
     u16 item;
 };
 
-static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
 static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u8 substructType);
 static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
@@ -867,7 +866,6 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     SetBoxMonData(boxMon, MON_DATA_FORM, &form);
     SetBoxMonData(boxMon, MON_DATA_GENDER, &gender);
 
-    checksum = CalculateBoxMonChecksum(boxMon);
     EncryptBoxMon(boxMon);
     StringCopy(speciesName, GetSpeciesName(species));
     SetBoxMonData(boxMon, MON_DATA_NICKNAME, speciesName);
@@ -1403,11 +1401,6 @@ void CreateEnemyEventMon(void)
         heldItem[1] = itemId >> 8;
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
-}
-
-static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
-{
-    return 0;
 }
 
 #define CALC_STAT(base, iv, ev, statIndex, field)               \
