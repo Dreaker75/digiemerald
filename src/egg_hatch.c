@@ -341,8 +341,7 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
          TRUE, form,
          TRUE, gender,
          TRUE, ability,
-         TRUE, nature,
-          OT_ID_PLAYER_ID, 0);
+         TRUE, nature);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonData(temp, MON_DATA_MOVE1 + i,  &moves[i]);

@@ -26,11 +26,6 @@ SlateportCity_NameRatersHouse_EventScript_RateMonNickname::
 	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
 	goto_if_eq VAR_RESULT, SPECIES_EGG, SlateportCity_NameRatersHouse_EventScript_CantRateEgg
 	special BufferMonNickname
-	special IsMonOTIDNotPlayers
-	goto_if_eq VAR_RESULT, TRUE, SlateportCity_NameRatersHouse_EventScript_PlayerNotMonsOT
-	specialvar VAR_RESULT, MonOTNameNotPlayer
-	special BufferMonNickname
-	goto_if_eq VAR_RESULT, TRUE, SlateportCity_NameRatersHouse_EventScript_PlayerNotMonsOT
 	msgbox SlateportCity_NameRatersHouse_Text_FineNameSuggestBetterOne, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, SlateportCity_NameRatersHouse_EventScript_ChangeNickname
 	goto_if_eq VAR_RESULT, NO, SlateportCity_NameRatersHouse_EventScript_DeclineNameRate
@@ -38,11 +33,6 @@ SlateportCity_NameRatersHouse_EventScript_RateMonNickname::
 
 SlateportCity_NameRatersHouse_EventScript_CantRateEgg::
 	msgbox SlateportCity_NameRatersHouse_Text_ThatIsMerelyAnEgg, MSGBOX_DEFAULT
-	release
-	end
-
-SlateportCity_NameRatersHouse_EventScript_PlayerNotMonsOT::
-	msgbox SlateportCity_NameRatersHouse_Text_MagnificentName, MSGBOX_DEFAULT
 	release
 	end
 
@@ -97,13 +87,6 @@ SlateportCity_NameRatersHouse_Text_NameNoDifferentYetSuperior:
 	.string "It looks no different from before,\n"
 	.string "and yet, this is vastly superior!\p"
 	.string "How fortunate for you!$"
-
-SlateportCity_NameRatersHouse_Text_MagnificentName:
-	.string "Hmmm… {STR_VAR_1} it is!\p"
-	.string "This is a magnificent nickname!\n"
-	.string "It is impeccably beyond reproach!\p"
-	.string "You'll do well to cherish your\n"
-	.string "{STR_VAR_1} now and beyond.$"
 
 SlateportCity_NameRatersHouse_Text_ThatIsMerelyAnEgg:
 	.string "Now, now.\n"

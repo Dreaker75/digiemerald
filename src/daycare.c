@@ -1072,8 +1072,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
               FALSE, 0,
               FALSE, 0,
               FALSE, 0,
-              FALSE, 0,
-              OT_ID_PLAYER_ID, 0);
+              FALSE, 0);
     metLevel = 0;
     language = LANGUAGE_JAPANESE;
     SetMonData(mon, MON_DATA_NICKNAME, sJapaneseEggNickname);
@@ -1099,8 +1098,7 @@ static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *
               FALSE, 0,
               FALSE, 0,
               FALSE, 0,
-              TRUE, daycare->offspringNature,
-              OT_ID_PLAYER_ID, 0);
+              TRUE, daycare->offspringNature);
     metLevel = 0;
     language = LANGUAGE_JAPANESE;
     SetMonData(mon, MON_DATA_NICKNAME, sJapaneseEggNickname);
@@ -1255,13 +1253,11 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
     u32 i;
     u16 eggGroups[DAYCARE_MON_COUNT][EGG_GROUPS_PER_MON];
     u16 species[DAYCARE_MON_COUNT];
-    u32 trainerIds[DAYCARE_MON_COUNT];
     u32 genders[DAYCARE_MON_COUNT];
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
         species[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
-        trainerIds[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_OT_ID);
         genders[i] = GetGenderU8Value(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_GENDER));
         eggGroups[i][0] = gSpeciesInfo[species[i]].eggGroups[0];
         eggGroups[i][1] = gSpeciesInfo[species[i]].eggGroups[1];
@@ -1277,9 +1273,6 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
     // one parent is Ditto
     if (eggGroups[0][0] == EGG_GROUP_DITTO || eggGroups[1][0] == EGG_GROUP_DITTO)
     {
-        if (trainerIds[0] == trainerIds[1])
-            return PARENTS_LOW_COMPATIBILITY;
-
         return PARENTS_MED_COMPATIBILITY;
     }
     // neither parent is Ditto
@@ -1294,16 +1287,10 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
 
         if (species[0] == species[1])
         {
-            if (trainerIds[0] == trainerIds[1])
-                return PARENTS_MED_COMPATIBILITY; // same species, same trainer
-
             return PARENTS_MAX_COMPATIBILITY; // same species, different trainers
         }
         else
         {
-            if (trainerIds[0] != trainerIds[1])
-                return PARENTS_MED_COMPATIBILITY; // different species, different trainers
-
             return PARENTS_LOW_COMPATIBILITY; // different species, same trainer
         }
     }

@@ -2901,7 +2901,6 @@ void CreateContestMonFromParty(u8 partyIndex)
     gContestMons[gContestPlayerMonIndex].moves[2] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE3);
     gContestMons[gContestPlayerMonIndex].moves[3] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE4);
     gContestMons[gContestPlayerMonIndex].form = GetMonData(&gPlayerParty[partyIndex], MON_DATA_FORM);
-    gContestMons[gContestPlayerMonIndex].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID);
     gContestMons[gContestPlayerMonIndex].gender = GetMonData(&gPlayerParty[partyIndex], MON_DATA_GENDER);
     gContestMons[gContestPlayerMonIndex].nature = GetMonData(&gPlayerParty[partyIndex], MON_DATA_NATURE);
 
@@ -5448,7 +5447,6 @@ static void SetMoveAnimAttackerData(u8 contestant)
     gContestResources->moveAnim->species = SanitizeSpecies(gContestMons[contestant].species);
     gContestResources->moveAnim->form = gContestMons[contestant].form;
     gContestResources->moveAnim->gender = gContestMons[contestant].gender;
-    gContestResources->moveAnim->otId = gContestMons[contestant].otId;
 }
 
 static void CreateInvisibleBattleTargetSprite(void)
@@ -5645,7 +5643,6 @@ bool8 SaveContestWinner(u8 rank)
         gSaveBlock1Ptr->contestWinners[id].gender = gContestMons[i].gender;
         gSaveBlock1Ptr->contestWinners[id].nature = gContestMons[i].nature;
         gSaveBlock1Ptr->contestWinners[id].species = gContestMons[i].species;
-        gSaveBlock1Ptr->contestWinners[id].trainerId = gContestMons[i].otId;
         StringCopy(gSaveBlock1Ptr->contestWinners[id].monName, gContestMons[i].nickname);
         StringCopy(gSaveBlock1Ptr->contestWinners[id].trainerName, gContestMons[i].trainerName);
         if(gLinkContestFlags & LINK_CONTEST_FLAG_IS_LINK)
@@ -5663,7 +5660,6 @@ bool8 SaveContestWinner(u8 rank)
         // Set the most recent winner so the artist can show the player their painting
         gCurContestWinner.form = gContestMons[i].form;
         gCurContestWinner.gender = gContestMons[i].gender;
-        gCurContestWinner.trainerId = gContestMons[i].otId;
         gCurContestWinner.species = gContestMons[i].species;
         StringCopy(gCurContestWinner.monName, gContestMons[i].nickname);
         StringCopy(gCurContestWinner.trainerName, gContestMons[i].trainerName);

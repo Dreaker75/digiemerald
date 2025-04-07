@@ -15,14 +15,12 @@ enum {
     MON_DATA_FORM,  // For stuff like Unown Letters
     MON_DATA_GENDER,
     MON_DATA_STATUS,
-    MON_DATA_OT_ID,
     MON_DATA_LANGUAGE,
     MON_DATA_SANITY_IS_BAD_EGG,
     MON_DATA_SANITY_HAS_SPECIES,
     MON_DATA_SANITY_IS_EGG,
     MON_DATA_OT_NAME,
     MON_DATA_MARKINGS,
-    MON_DATA_CHECKSUM,
     MON_DATA_HP,
     MON_DATA_NATURE,
     MON_DATA_HP_LOST,
@@ -236,7 +234,6 @@ union PokemonSubstruct
 
 struct BoxPokemon
 {
-    u32 otId;
     u8 nickname[min(10, POKEMON_NAME_LENGTH)];
     u8 language:3;
     u8 nature:5; // 31 natures.
@@ -249,7 +246,6 @@ struct BoxPokemon
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings:4;
     u8 compressedStatus:4;
-    u16 checksum;
     u8 form:5;
     u8 unused2:3;
     u16 hpLost:14; // 16383 HP.
@@ -332,15 +328,15 @@ struct BattlePokemon
     /*0x2F*/ u16 item;
     /*0x31*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x3C*/ u8 ppBonuses;
-    /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
+    /*0x3D*/ u8 unused1[PLAYER_NAME_LENGTH + 1];
     /*0x45*/ u32 experience;
     /*0x49*/ u16 form:5;
     /*0x49*/ u16 gender:2;
     /*0x5A*/ u16 nature:5;
-    /*0x49*/ u16 unused:4;
+    /*0x49*/ u16 unused2:4;
     /*0x4D*/ u32 status1;
     /*0x51*/ u32 status2;
-    /*0x55*/ u32 otId;
+    /*0x55*/ u32 unused3;
     /*0x59*/ u8 metLevel;
 };
 
@@ -622,8 +618,8 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIdType, u32 fixedOtId);
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIdType, u32 fixedOtId);
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature);
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature);
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature);
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 form, u8 gender, u8 nature);
 void CreateMonWithIVsFormGenderAbilityNature(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u8 form, u8 gender, u8 ability, u8 nature);
@@ -632,7 +628,7 @@ void CreateMonWithEVSpread(struct Pokemon *mon, u16 species, u8 level, u8 fixedI
 void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
 void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPokemon *src, bool8 lvl50);
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
-void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level, u8 nature, u8 fixedIV, u8 evSpread, u32 otId);
+void CreateMonWithEVSpreadNature(struct Pokemon *mon, u16 species, u8 level, u8 nature, u8 fixedIV, u8 evSpread);
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
 bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battlerId);
 u16 GetUnionRoomTrainerPic(void);

@@ -146,7 +146,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_1 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_ELECTRIKE,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .monName = _("ELECTER"),
@@ -156,7 +155,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_2 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_TROPIUS,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .monName = _("TROPO"),
@@ -166,7 +164,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_3 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_XATU,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .monName = _("TUXA"),
@@ -176,7 +173,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_4 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_PLUSLE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .monName = _("PULSE"),
@@ -186,7 +182,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_5 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_SHUPPET,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .monName = _("SHUPUP"),
@@ -196,7 +191,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_6 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_ZANGOOSE,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .monName = _("GOOZAN"),
@@ -206,7 +200,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_UNUSED_1 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_LOUDRED,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .monName = _("LOUDED"),
@@ -216,7 +209,6 @@ const struct ContestWinner gDefaultContestWinners[] =
     [CONTEST_WINNER_HALL_UNUSED_2 - 1] = {
         .form = 0,
         .gender = 0,
-        .trainerId = CONTEST_AI_TRAINER_ID,
         .species = SPECIES_DELCATTY,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .monName = _("KITSY"),
@@ -254,7 +246,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 50,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EDITH] = {
         .species = SPECIES_ILLUMISE,
@@ -283,7 +274,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 60,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EVAN] = {
         .species = SPECIES_DUSTOX,
@@ -312,7 +302,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 70,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KELSEY] = {
         .species = SPECIES_SEEDOT,
@@ -341,7 +330,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 80,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MADISON] = {
         .species = SPECIES_TAILLOW,
@@ -370,7 +358,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 90,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RAYMOND] = {
         .species = SPECIES_NINCADA,
@@ -399,7 +386,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_GRANT] = {
         .species = SPECIES_SHROOMISH,
@@ -428,7 +414,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 50,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_PAIGE] = {
         .species = SPECIES_SPHEAL,
@@ -457,7 +442,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 60,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALEC] = {
         .species = SPECIES_SLAKOTH,
@@ -486,7 +470,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 70,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SYDNEY] = {
         .species = SPECIES_WHISMUR,
@@ -515,7 +498,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 80,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MORRIS] = {
         .species = SPECIES_MAKUHITA,
@@ -544,7 +526,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 90,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARIAH] = {
         .species = SPECIES_ARON,
@@ -573,7 +554,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RUSSELL] = {
         .species = SPECIES_CROBAT,
@@ -602,7 +582,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 50,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MELANIE] = {
         .species = SPECIES_GULPIN,
@@ -631,7 +610,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 60,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CHANCE] = {
         .species = SPECIES_MANECTRIC,
@@ -660,7 +638,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 70,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AGATHA] = {
         .species = SPECIES_BULBASAUR,
@@ -689,7 +666,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 50,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BEAU] = {
         .species = SPECIES_BUTTERFREE,
@@ -718,7 +694,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 60,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KAY] = {
         .species = SPECIES_PIDGEOTTO,
@@ -747,7 +722,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 70,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CALE] = {
         .species = SPECIES_DIGLETT,
@@ -776,7 +750,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 80,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAITLIN] = {
         .species = SPECIES_POLIWAG,
@@ -805,7 +778,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 90,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_COLBY] = {
         .species = SPECIES_TOTODILE,
@@ -834,7 +806,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KYLIE] = {
         .species = SPECIES_LEDYBA,
@@ -863,7 +834,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 90,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LIAM] = {
         .species = SPECIES_DELIBIRD,
@@ -892,7 +862,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 80,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MILO] = {
         .species = SPECIES_LARVITAR,
@@ -921,7 +890,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 70,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KARINA] = {
         .species = SPECIES_ROSELIA,
@@ -950,7 +918,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BOBBY] = {
         .species = SPECIES_DODRIO,
@@ -979,7 +946,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 110,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLAIRE] = {
         .species = SPECIES_TRAPINCH,
@@ -1008,7 +974,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 120,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_WILLIE] = {
         .species = SPECIES_CACNEA,
@@ -1037,7 +1002,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 130,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CASSIDY] = {
         .species = SPECIES_SANDSLASH,
@@ -1066,7 +1030,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 140,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MORGAN] = {
         .species = SPECIES_BALTOY,
@@ -1095,7 +1058,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 150,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SUMMER] = {
         .species = SPECIES_MEDICHAM,
@@ -1124,7 +1086,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MILES] = {
         .species = SPECIES_SPINDA,
@@ -1153,7 +1114,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 110,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AUDREY] = {
         .species = SPECIES_SWABLU,
@@ -1182,7 +1142,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 120,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AVERY] = {
         .species = SPECIES_SPOINK,
@@ -1211,7 +1170,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 130,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ARIANA] = {
         .species = SPECIES_KECLEON,
@@ -1240,7 +1198,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 140,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ASHTON] = {
         .species = SPECIES_GOLDEEN,
@@ -1269,7 +1226,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 150,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SANDRA] = {
         .species = SPECIES_BARBOACH,
@@ -1298,7 +1254,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CARSON] = {
         .species = SPECIES_SKARMORY,
@@ -1327,7 +1282,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 110,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KATRINA] = {
         .species = SPECIES_LOTAD,
@@ -1356,7 +1310,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 120,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LUKE] = {
         .species = SPECIES_SLOWBRO,
@@ -1385,7 +1338,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 100,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RAUL] = {
         .species = SPECIES_FARFETCHD,
@@ -1414,7 +1366,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 110,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JADA] = {
         .species = SPECIES_SEEL,
@@ -1443,7 +1394,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 120,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ZEEK] = {
         .species = SPECIES_DROWZEE,
@@ -1472,7 +1422,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 130,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DIEGO] = {
         .species = SPECIES_HITMONCHAN,
@@ -1501,7 +1450,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 140,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALIYAH] = {
         .species = SPECIES_BLISSEY,
@@ -1530,7 +1478,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 150,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NATALIA] = {
         .species = SPECIES_ELEKID,
@@ -1559,7 +1506,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 140,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEVIN] = {
         .species = SPECIES_SNUBBULL,
@@ -1588,7 +1534,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 130,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_TYLOR] = {
         .species = SPECIES_MISDREAVUS,
@@ -1617,7 +1562,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 120,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RONNIE] = {
         .species = SPECIES_LAIRON,
@@ -1646,7 +1590,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 200,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLAUDIA] = {
         .species = SPECIES_SHIFTRY,
@@ -1675,7 +1618,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 210,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ELIAS] = {
         .species = SPECIES_NINJASK,
@@ -1704,7 +1646,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 220,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JADE] = {
         .species = SPECIES_SWELLOW,
@@ -1733,7 +1674,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 230,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FRANCIS] = {
         .species = SPECIES_MIGHTYENA,
@@ -1762,7 +1702,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 240,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ALISHA] = {
         .species = SPECIES_BEAUTIFLY,
@@ -1791,7 +1730,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 250,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SAUL] = {
         .species = SPECIES_SEAKING,
@@ -1820,7 +1758,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 200,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FELICIA] = {
         .species = SPECIES_CASTFORM_NORMAL,
@@ -1849,7 +1786,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 210,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_EMILIO] = {
         .species = SPECIES_MACHOKE,
@@ -1878,7 +1814,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 220,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KARLA] = {
         .species = SPECIES_LOMBRE,
@@ -1907,7 +1842,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 230,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DARRYL] = {
         .species = SPECIES_SEVIPER,
@@ -1936,7 +1870,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 240,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SELENA] = {
         .species = SPECIES_WAILMER,
@@ -1965,7 +1898,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 250,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NOEL] = {
         .species = SPECIES_MAGIKARP,
@@ -1994,7 +1926,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LACEY] = {
         .species = SPECIES_LUNATONE,
@@ -2023,7 +1954,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 210,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CORBIN] = {
         .species = SPECIES_ABSOL,
@@ -2052,7 +1982,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 220,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_GRACIE] = {
         .species = SPECIES_EXEGGUTOR,
@@ -2081,7 +2010,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 200,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_COLTIN] = {
         .species = SPECIES_CUBONE,
@@ -2110,7 +2038,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 210,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ELLIE] = {
         .species = SPECIES_HITMONLEE,
@@ -2139,7 +2066,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 220,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARCUS] = {
         .species = SPECIES_SQUIRTLE,
@@ -2168,7 +2094,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 230,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KIARA] = {
         .species = SPECIES_KANGASKHAN,
@@ -2197,7 +2122,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 240,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_BRYCE] = {
         .species = SPECIES_PINECO,
@@ -2226,7 +2150,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 250,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JAMIE] = {
         .species = SPECIES_DUNSPARCE,
@@ -2255,7 +2178,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 240,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JORGE] = {
         .species = SPECIES_HOUNDOOM,
@@ -2284,7 +2206,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 230,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEVON] = {
         .species = SPECIES_MILTANK,
@@ -2313,7 +2234,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 220,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JUSTINA] = {
         .species = SPECIES_GYARADOS,
@@ -2342,7 +2262,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_RALPH] = {
         .species = SPECIES_LOUDRED,
@@ -2371,7 +2290,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_ROSA] = {
         .species = SPECIES_SKITTY,
@@ -2400,7 +2318,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KEATON] = {
         .species = SPECIES_SLAKING,
@@ -2429,7 +2346,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MAYRA] = {
         .species = SPECIES_ALTARIA,
@@ -2458,7 +2374,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LAMAR] = {
         .species = SPECIES_KIRLIA,
@@ -2487,7 +2402,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_AUBREY] = {
         .species = SPECIES_BELLOSSOM,
@@ -2516,7 +2430,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_NIGEL] = {
         .species = SPECIES_SABLEYE,
@@ -2545,7 +2458,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAMILLE] = {
         .species = SPECIES_NATU,
@@ -2574,7 +2486,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_DEON] = {
         .species = SPECIES_SHARPEDO,
@@ -2603,7 +2514,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JANELLE] = {
         .species = SPECIES_LUVDISC,
@@ -2632,7 +2542,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_HEATH] = {
         .species = SPECIES_HERACROSS,
@@ -2661,7 +2570,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SASHA] = {
         .species = SPECIES_ELECTRODE,
@@ -2690,7 +2598,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_FRANKIE] = {
         .species = SPECIES_PICHU,
@@ -2719,7 +2626,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_HELEN] = {
         .species = SPECIES_WOBBUFFET,
@@ -2748,7 +2654,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CAMILE] = {
         .species = SPECIES_GENGAR,
@@ -2777,7 +2682,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_MARTIN] = {
         .species = SPECIES_PORYGON,
@@ -2806,7 +2710,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_SERGIO] = {
         .species = SPECIES_DRAGONITE,
@@ -2835,7 +2738,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_KAILEY] = {
         .species = SPECIES_MEOWTH,
@@ -2864,7 +2766,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_PERLA] = {
         .species = SPECIES_JYNX,
@@ -2893,7 +2794,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_CLARA] = {
         .species = SPECIES_TOGEPI,
@@ -2922,7 +2822,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_JAKOB] = {
         .species = SPECIES_ESPEON,
@@ -2951,7 +2850,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_TREY] = {
         .species = SPECIES_SLOWKING,
@@ -2980,7 +2878,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     },
     [CONTEST_OPPONENT_LANE] = {
         .species = SPECIES_URSARING,
@@ -3009,7 +2906,6 @@ const struct ContestPokemon gContestOpponents[] =
         .sheen = 255,
         .form = 0,
         .gender = 0,
-        .otId = CONTEST_AI_TRAINER_ID,
     }
 };
 

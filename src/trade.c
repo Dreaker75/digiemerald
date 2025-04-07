@@ -152,7 +152,6 @@ struct InGameTrade {
     u16 species;
     u8 ivs[NUM_STATS];
     u8 abilityNum;
-    u32 otId;
     u8 conditions[CONTEST_CATEGORIES_COUNT];
     u16 form:5;
     u16 gender:2;
@@ -474,8 +473,7 @@ static void CB2_CreateTradeMenu(void)
                       FALSE, 0,
                       FALSE, 0,
                       FALSE, 0,
-                      FALSE, 0,
-                      OT_ID_PLAYER_ID, 0);
+                      FALSE, 0);
 
         PrintTradeMessage(MSG_STANDBY);
         ShowBg(0);
@@ -4557,8 +4555,7 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
               TRUE, inGameTrade->form,
               TRUE, inGameTrade->gender,
               TRUE, inGameTrade->abilityNum,
-              TRUE, inGameTrade->nature,
-              OT_ID_PRESET, inGameTrade->otId);
+              TRUE, inGameTrade->nature);
 
     SetMonData(pokemon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
     SetMonData(pokemon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);
@@ -4606,10 +4603,6 @@ static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *trad
     StringCopy(mail->playerName, trade->otName);
     PadNameString(mail->playerName, CHAR_SPACE);
 
-    mail->trainerId[0] = trade->otId >> 24;
-    mail->trainerId[1] = trade->otId >> 16;
-    mail->trainerId[2] = trade->otId >> 8;
-    mail->trainerId[3] = trade->otId;
     mail->species = trade->species;
     mail->itemId = trade->heldItem;
 }

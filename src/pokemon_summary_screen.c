@@ -142,7 +142,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u16 species; // 0x0
         u16 species2; // 0x2
         u8 isEgg:1; // 0x4
-        u8 unused:1;    // isShiny
+        u8 unused1:1;    // isShiny
         u8 padding1:6;
         u8 level; // 0x5
         u8 ribbonCount; // 0x6
@@ -173,7 +173,6 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u8 ppBonuses; // 0x34
         u8 sanity; // 0x35
         u8 OTName[17]; // 0x36
-        u32 OTID; // 0x48
         u8 teraType;
         u8 mintNature;
     } summary;
@@ -266,7 +265,6 @@ static void CreateTextPrinterTask(u8);
 static void PrintInfoPageText(void);
 static void Task_PrintInfoPage(u8);
 static void PrintMonOTName(void);
-static void PrintMonOTID(void);
 static void PrintMonAbilityName(void);
 static void PrintMonAbilityDescription(void);
 static void BufferMonTrainerMemo(void);
@@ -1520,7 +1518,6 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         ConvertInternationalString(sum->OTName, GetMonData(mon, MON_DATA_LANGUAGE));
         sum->ailment = GetMonAilment(mon);
         sum->OTGender = GetMonData(mon, MON_DATA_OT_GENDER);
-        sum->OTID = GetMonData(mon, MON_DATA_OT_ID);
         sum->metLocation = GetMonData(mon, MON_DATA_MET_LOCATION);
         sum->metLevel = GetMonData(mon, MON_DATA_MET_LEVEL);
         sum->metGame = GetMonData(mon, MON_DATA_MET_GAME);
@@ -3100,7 +3097,6 @@ static void PrintInfoPageText(void)
     else
     {
         PrintMonOTName();
-        PrintMonOTID();
         PrintMonAbilityName();
         PrintMonAbilityDescription();
         BufferMonTrainerMemo();
@@ -3115,9 +3111,6 @@ static void Task_PrintInfoPage(u8 taskId)
     {
     case 1:
         PrintMonOTName();
-        break;
-    case 2:
-        PrintMonOTID();
         break;
     case 3:
         PrintMonAbilityName();
@@ -3150,17 +3143,6 @@ static void PrintMonOTName(void)
             PrintTextOnWindow(windowId, sMonSummaryScreen->summary.OTName, x, 1, 0, 5);
         else
             PrintTextOnWindow(windowId, sMonSummaryScreen->summary.OTName, x, 1, 0, 6);
-    }
-}
-
-static void PrintMonOTID(void)
-{
-    int xPos;
-    if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE)
-    {
-        ConvertIntToDecimalStringN(StringCopy(gStringVar1, gText_IDNumber2), (u16)sMonSummaryScreen->summary.OTID, STR_CONV_MODE_LEADING_ZEROS, 5);
-        xPos = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 56);
-        PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ID), gStringVar1, xPos, 1, 0, 1);
     }
 }
 
@@ -3252,24 +3234,21 @@ static void GetMetLevelString(u8 *output)
 static bool8 DoesMonOTMatchOwner(void)
 {
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
-    u32 trainerId;
     u8 gender;
 
     if (sMonSummaryScreen->monList.mons == gEnemyParty)
     {
         u8 multiID = GetMultiplayerId() ^ 1;
-        trainerId = gLinkPlayers[multiID].trainerId & 0xFFFF;
         gender = gLinkPlayers[multiID].gender;
         StringCopy(gStringVar1, gLinkPlayers[multiID].name);
     }
     else
     {
-        trainerId = GetPlayerIDAsU32() & 0xFFFF;
         gender = gSaveBlock2Ptr->playerGender;
         StringCopy(gStringVar1, gSaveBlock2Ptr->playerName);
     }
 
-    if (gender != sum->OTGender || trainerId != (sum->OTID & 0xFFFF) || StringCompareWithoutExtCtrlCodes(gStringVar1, sum->OTName))
+    if (gender != sum->OTGender || StringCompareWithoutExtCtrlCodes(gStringVar1, sum->OTName))
         return FALSE;
     else
         return TRUE;

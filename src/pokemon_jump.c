@@ -159,7 +159,6 @@ struct PokemonJump_MonInfo
 {
     u16 unused1:1;
     u16 species:15;
-    u32 otId;
     u8 form;
     u8 gender;
 };
@@ -933,7 +932,6 @@ static s16 GetPokemonJumpSpeciesIdx(u16 species)
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *monInfo, struct Pokemon *mon)
 {
     monInfo->species = GetMonData(mon, MON_DATA_SPECIES);
-    monInfo->otId = GetMonData(mon, MON_DATA_OT_ID);
     monInfo->gender = GetMonData(mon, MON_DATA_GENDER);
     monInfo->form = GetMonData(mon, MON_DATA_FORM);
 }
@@ -4207,7 +4205,6 @@ struct MonInfoPacket
     u16 species:15;
     u8 form;
     u8 gender;
-    u32 otId;
 };
 
 static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
@@ -4216,7 +4213,6 @@ static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
     packet.id = PACKET_MON_INFO,
     packet.gender = monInfo->gender,
     packet.species = monInfo->species,
-    packet.otId = monInfo->otId,
     packet.form = monInfo->form,
     Rfu_SendPacket(&packet);
 }
@@ -4233,7 +4229,6 @@ static bool32 RecvPacket_MonInfo(int multiplayerId, struct PokemonJump_MonInfo *
     {
         monInfo->species = packet.species;
         monInfo->gender = packet.gender;
-        monInfo->otId = packet.otId;
         monInfo->form = packet.form;
         return TRUE;
     }

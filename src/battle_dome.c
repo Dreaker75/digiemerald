@@ -2203,7 +2203,7 @@ static void InitDomeOpponentParty(void)
     CreateDomeOpponentMons(TrainerIdToTournamentId(gTrainerBattleOpponent_A));
 }
 
-static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tournamentMonId, u32 otId)
+static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tournamentMonId)
 {
     int i;
     u8 friendship = MAX_FRIENDSHIP;
@@ -2213,12 +2213,12 @@ static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tou
     u8 fixedIv = GetDomeTrainerMonIvs(tournamentTrainerId); // BUG: Using the wrong ID. As a result, all Pokémon have ivs of 3.
     #endif
     u8 level = SetFacilityPtrsGetLevel();
-    CreateMonWithEVSpreadNatureOTID(&gEnemyParty[monPartyId],
+    CreateMonWithEVSpreadNature(&gEnemyParty[monPartyId],
                                          gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].species,
                                          level,
                                          gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].nature,
                                          fixedIv,
-                                         gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].evSpread, otId);
+                                         gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].evSpread);
 
     friendship = MAX_FRIENDSHIP;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -2251,7 +2251,7 @@ static void CreateDomeOpponentMons(u16 tournamentTrainerId)
         {
             if (selectedMonBits & 1)
             {
-                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i, otId);
+                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i);
                 monsCount++;
             }
             selectedMonBits >>= 1;
@@ -2264,7 +2264,7 @@ static void CreateDomeOpponentMons(u16 tournamentTrainerId)
         {
             if (selectedMonBits & (1 << (FRONTIER_PARTY_SIZE - 1)))
             {
-                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i, otId);
+                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i);
                 monsCount++;
             }
             selectedMonBits <<= 1;

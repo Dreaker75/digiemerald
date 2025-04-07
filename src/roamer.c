@@ -92,8 +92,7 @@ static void CreateInitialRoamerMon(bool16 createLatios)
         FALSE, 0,
         FALSE, 0,
         FALSE, 0,
-        FALSE, 0,
-        OT_ID_PLAYER_ID, 0);
+        FALSE, 0);
     ROAMER->level = 40;
     ROAMER->status = 0;
     ROAMER->active = TRUE;

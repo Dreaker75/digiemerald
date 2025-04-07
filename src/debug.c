@@ -4080,8 +4080,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
                  TRUE, 0,
                  TRUE, FEMALE,
                  TRUE, 0,
-                 TRUE, 0,
-                 OT_ID_PLAYER_ID, 0);
+                 TRUE, 0);
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
@@ -4123,8 +4122,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
                              TRUE, 0,
                              TRUE, FEMALE,
                              TRUE, 0,
-                             TRUE, 0,
-                             OT_ID_PLAYER_ID, 0);
+                             TRUE, 0);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
                 species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
                 spaceAvailable = TRUE;

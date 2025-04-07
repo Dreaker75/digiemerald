@@ -118,8 +118,7 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
                   FALSE, 0,
                   FALSE, 0,
                   FALSE, 0,
-                  FALSE, 0,
-                  OT_ID_PLAYER_ID, 0);
+                  FALSE, 0);
     if (item)
     {
         heldItem[0] = item;
@@ -141,8 +140,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
                   FALSE, 0,
                   FALSE, 0,
                   FALSE, 0,
-                  FALSE, 0,
-                  OT_ID_PLAYER_ID, 0);
+                  FALSE, 0);
     if (item1)
     {
         heldItem1[0] = item1;
@@ -157,8 +155,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
                   FALSE, 0,
                   FALSE, 0,
                   FALSE, 0,
-                  FALSE, 0,
-                  OT_ID_PLAYER_ID, 0);
+                  FALSE, 0);
     if (item2)
     {
         heldItem2[0] = item2;

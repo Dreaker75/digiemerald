@@ -7,6 +7,7 @@
 #include "string_util.h"
 #include "text.h"
 #include "pokemon_storage_system.h"
+#include "new_game.h"
 
 static EWRAM_DATA u16 sWinNumberDigit = 0;
 static EWRAM_DATA u16 sOtIdDigit = 0;
@@ -53,48 +54,13 @@ void PickLotteryCornerTicket(void)
     gSpecialVar_0x8004 = 0;
     slot = 0;
     box = 0;
-    for (i = 0; i < PARTY_SIZE; i++)
+    u8 numMatchingDigits = GetMatchingDigits(gSpecialVar_Result, GetTrainerId(gSaveBlock2Ptr->playerTrainerId));
+
+    if (numMatchingDigits > gSpecialVar_0x8004 && numMatchingDigits > 1)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
-
-        if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
-        {
-            // do not calculate ticket values for eggs.
-            if (!GetMonData(mon, MON_DATA_IS_EGG))
-            {
-                u32 otId = GetMonData(mon, MON_DATA_OT_ID);
-                u8 numMatchingDigits = GetMatchingDigits(gSpecialVar_Result, otId);
-
-                if (numMatchingDigits > gSpecialVar_0x8004 && numMatchingDigits > 1)
-                {
-                    gSpecialVar_0x8004 = numMatchingDigits - 1;
-                    box = TOTAL_BOXES_COUNT;
-                    slot = i;
-                }
-            }
-        }
-        else // Pokémon are always arranged from populated spots first to unpopulated, so the moment a NONE species is found, that's the end of the list.
-            break;
-    }
-
-    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
-    {
-        for (j = 0; j < IN_BOX_COUNT; j++)
-        {
-            if (GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_SPECIES) != SPECIES_NONE &&
-            !GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_IS_EGG))
-            {
-                u32 otId = GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_OT_ID);
-                u8 numMatchingDigits = GetMatchingDigits(gSpecialVar_Result, otId);
-
-                if (numMatchingDigits > gSpecialVar_0x8004 && numMatchingDigits > 1)
-                {
-                    gSpecialVar_0x8004 = numMatchingDigits - 1;
-                    box = i;
-                    slot = j;
-                }
-            }
-        }
+        gSpecialVar_0x8004 = numMatchingDigits - 1;
+        box = TOTAL_BOXES_COUNT;
+        slot = i;
     }
 
     if (gSpecialVar_0x8004 != 0)

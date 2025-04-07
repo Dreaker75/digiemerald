@@ -1739,7 +1739,6 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
     u8 ivs = 0;
     u8 level = 0;
     u8 friendship = 0;
-    u32 otId = 0;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / 7;
@@ -1752,7 +1751,6 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
         level = FRONTIER_MAX_LEVEL_50;
 
     rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
     {
@@ -1762,13 +1760,12 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
             ivs = GetFactoryMonFixedIV(challengeNum + 1, FALSE);
         else
             ivs = GetFactoryMonFixedIV(challengeNum, FALSE);
-        CreateMonWithEVSpreadNatureOTID(&sFactorySelectScreen->mons[i + firstMonId].monData,
+        CreateMonWithEVSpreadNature(&sFactorySelectScreen->mons[i + firstMonId].monData,
                                              gFacilityTrainerMons[monId].species,
                                              level,
                                              gFacilityTrainerMons[monId].nature,
                                              ivs,
-                                             gFacilityTrainerMons[monId].evSpread,
-                                             otId);
+                                             gFacilityTrainerMons[monId].evSpread);
         friendship = 0;
         for (j = 0; j < MAX_MON_MOVES; j++)
             SetMonMoveAvoidReturn(&sFactorySelectScreen->mons[i + firstMonId].monData, gFacilityTrainerMons[monId].moves[j], j);
@@ -1783,22 +1780,19 @@ static void CreateSlateportTentSelectableMons(u8 firstMonId)
     u8 ivs = 0;
     u8 level = TENT_MIN_LEVEL;
     u8 friendship = 0;
-    u32 otId = 0;
 
     gFacilityTrainerMons = gSlateportBattleTentMons;
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
     {
         u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
         sFactorySelectScreen->mons[i + firstMonId].monId = monId;
-        CreateMonWithEVSpreadNatureOTID(&sFactorySelectScreen->mons[i + firstMonId].monData,
+        CreateMonWithEVSpreadNature(&sFactorySelectScreen->mons[i + firstMonId].monData,
                                              gFacilityTrainerMons[monId].species,
                                              level,
                                              gFacilityTrainerMons[monId].nature,
                                              ivs,
-                                             gFacilityTrainerMons[monId].evSpread,
-                                             otId);
+                                             gFacilityTrainerMons[monId].evSpread);
         friendship = 0;
         for (j = 0; j < MAX_MON_MOVES; j++)
             SetMonMoveAvoidReturn(&sFactorySelectScreen->mons[i + firstMonId].monData, gFacilityTrainerMons[monId].moves[j], j);

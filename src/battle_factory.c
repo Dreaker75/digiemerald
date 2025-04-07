@@ -441,8 +441,7 @@ static void SetPlayerAndOpponentParties(void)
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].form,
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].gender,
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum,
-                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature,
-                      OT_ID_PLAYER_ID, 0);
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature);
 
             count = 0;
             bits = gFacilityTrainerMons[monId].evSpread;
@@ -485,8 +484,7 @@ static void SetPlayerAndOpponentParties(void)
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].form,
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].gender,
                       TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum,
-                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature,
-                      OT_ID_PLAYER_ID, 0);
+                      TRUE, gSaveBlock2Ptr->frontier.rentalMons[i].nature);
 
             count = 0;
             bits = gFacilityTrainerMons[monId].evSpread;
@@ -772,7 +770,6 @@ void FillFactoryBrainParty(void)
     u8 friendship;
     int monLevel;
     u8 fixedIV;
-    u32 otId;
 
     u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
@@ -780,7 +777,6 @@ void FillFactoryBrainParty(void)
     fixedIV = GetFactoryMonFixedIV(challengeNum + 2, FALSE);
     monLevel = SetFacilityPtrsGetLevel();
     i = 0;
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
 
     while (i != FRONTIER_PARTY_SIZE)
     {
@@ -817,13 +813,12 @@ void FillFactoryBrainParty(void)
 
         species[i] = gFacilityTrainerMons[monId].species;
         heldItems[i] = gBattleFrontierHeldItems[gFacilityTrainerMons[monId].itemTableId];
-        CreateMonWithEVSpreadNatureOTID(&gEnemyParty[i],
+        CreateMonWithEVSpreadNature(&gEnemyParty[i],
                                              gFacilityTrainerMons[monId].species,
                                              monLevel,
                                              gFacilityTrainerMons[monId].nature,
                                              fixedIV,
-                                             gFacilityTrainerMons[monId].evSpread,
-                                             otId);
+                                             gFacilityTrainerMons[monId].evSpread);
 
         friendship = 0;
         for (k = 0; k < MAX_MON_MOVES; k++)

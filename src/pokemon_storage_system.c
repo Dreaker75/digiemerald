@@ -4115,7 +4115,6 @@ static void InitSupplementalTilemaps(void)
 
 static void SetUpShowPartyMenu(void)
 {
-    sStorage->partyMenuUnused1 = 20;
     sStorage->partyMenuY = 2;
     sStorage->partyMenuMoveTimer = 0;
     CreatePartyMonsSprites(FALSE);
@@ -4126,7 +4125,6 @@ static bool8 ShowPartyMenu(void)
     if (sStorage->partyMenuMoveTimer == 20)
         return FALSE;
 
-    sStorage->partyMenuUnused1--;
     sStorage->partyMenuY++;
     TilemapUtil_Move(TILEMAPID_PARTY_MENU, 3, 1);
     TilemapUtil_Update(TILEMAPID_PARTY_MENU);
@@ -4145,7 +4143,6 @@ static bool8 ShowPartyMenu(void)
 
 static void SetUpHidePartyMenu(void)
 {
-    sStorage->partyMenuUnused1 = 0;
     sStorage->partyMenuY = 22;
     sStorage->partyMenuMoveTimer = 0;
     if (sStorage->boxOption == OPTION_MOVE_ITEMS)
@@ -4156,7 +4153,6 @@ static bool8 HidePartyMenu(void)
 {
     if (sStorage->partyMenuMoveTimer != 20)
     {
-        sStorage->partyMenuUnused1++;
         sStorage->partyMenuY--;
         TilemapUtil_Move(TILEMAPID_PARTY_MENU, 3, -1);
         TilemapUtil_Update(TILEMAPID_PARTY_MENU);
@@ -4461,7 +4457,6 @@ static void InitMonIconFields(void)
         sStorage->boxMonsSprites[i] = NULL;
 
     sStorage->movingMonSprite = NULL;
-    sStorage->unkUnused1 = 0;
 }
 
 static u8 GetMonIconPriorityByCursorPos(void)
@@ -4687,7 +4682,6 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
 static void InitBoxMonIconScroll(u8 boxId, s8 direction)
 {
     sStorage->iconScrollState = 0;
-    sStorage->iconScrollToBoxId = boxId;
     sStorage->iconScrollDirection = direction;
     sStorage->iconScrollDistance = 32;
     sStorage->iconScrollSpeed = -(6 * direction);
@@ -5322,16 +5316,8 @@ static void SetUpScrollToBox(u8 boxId)
     s8 direction = DetermineBoxScrollDirection(boxId);
 
     sStorage->scrollSpeed = (direction > 0) ? 6 : -6;
-    sStorage->scrollUnused1 = (direction > 0) ? 1 : 2;
     sStorage->scrollTimer = 32;
-    sStorage->scrollToBoxIdUnused = boxId;
-    sStorage->scrollUnused2 = (direction <= 0) ? 5 : 0;
-    sStorage->scrollDirectionUnused = direction;
 
-    sStorage->scrollUnused3 = (direction > 0) ? 264 : 56;
-    sStorage->scrollUnused4 = (direction <= 0) ? 5 : 0;
-    sStorage->scrollUnused5 = 0;
-    sStorage->scrollUnused6 = 2;
     sStorage->scrollToBoxId = boxId;
     sStorage->scrollDirection = direction;
     sStorage->scrollState = 0;
@@ -8123,7 +8109,6 @@ static void AddMenu(void)
     PrintMenuTable(sStorage->menuWindowId, sStorage->menuItemsCount, (void *)sStorage->menuItems);
     InitMenuInUpperLeftCornerNormal(sStorage->menuWindowId, sStorage->menuItemsCount, 0);
     ScheduleBgCopyTilemapToVram(0);
-    sStorage->menuUnusedField = 0;
 }
 
 // Called after AddMenu to determine whether or not the handler callback should
@@ -9612,7 +9597,7 @@ void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst)
         *dst = gPokemonStoragePtr->boxes[boxId][boxPosition];
 }
 
-void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature, u8 otIDType, u32 otID)
+void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedForm, u8 fixedForm, u8 hasFixedGender, u8 fixedGender, u8 hasFixedAbility, u8 fixedAbility, u8 hasFixedNature, u8 fixedNature)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
     {
@@ -9623,8 +9608,7 @@ void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV,
                      hasFixedForm, fixedForm,
                      hasFixedGender, fixedGender,
                      hasFixedAbility, fixedAbility,
-                     hasFixedNature, fixedNature,
-                     otIDType, otID);
+                     hasFixedNature, fixedNature);
     }
 }
 

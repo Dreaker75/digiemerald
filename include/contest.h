@@ -114,7 +114,6 @@ struct ContestPokemon
     u8 nature:5;
     u8 unused3:1;
     u16 unused4;
-    u32 otId;
 };
 
 struct ContestTempSave
@@ -134,7 +133,6 @@ struct ContestMoveAnimData
     u8 targetGender:2;
     u8 contestant;
     u8 form;
-    u32 otId;
     u8 targetForm;
 };
 

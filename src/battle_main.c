@@ -2196,8 +2196,6 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
         for (i = 0; i < monsCount; i++)
         {
             const struct TrainerMon *partyData = trainer->party;
-            u32 otIdType = OT_ID_RANDOM_NO_SHINY;
-            u32 fixedOtId = 0;
             u8 hasFixedAbility = partyData[i].ability != ABILITY_NONE;
             u8 ability = partyData[i].ability;
             if (ability >= ARRAY_COUNT(gSpeciesInfo[partyData[i].species].abilities))
@@ -2209,8 +2207,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                       TRUE, partyData[i].form,
                       TRUE, partyData[i].gender,
                       hasFixedAbility, ability,
-                      (partyData[i].nature != 0 ? TRUE : FALSE), partyData[i].nature,
-                      otIdType, fixedOtId);
+                      (partyData[i].nature != 0 ? TRUE : FALSE), partyData[i].nature);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[i]);

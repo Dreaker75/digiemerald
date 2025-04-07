@@ -40,11 +40,10 @@
 
 struct HallofFameMon
 {
-    u32 tid;
     u8 form;
     u8 gender;
     u16 padding;
-    u16 unused:1;
+    u16 unused1:1;
     u16 species:15;
     u8 lvl;
     u8 nickname[POKEMON_NAME_LENGTH];
@@ -337,7 +336,6 @@ static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/japanese_hof.4bpp
 
 static const struct HallofFameMon sDummyFameMon =
 {
-    .tid = 0x3EA03EA,
     .form = 0,
     .gender = FEMALE,
     .species = SPECIES_NONE,
@@ -450,7 +448,6 @@ static void Task_Hof_InitMonData(u8 taskId)
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
         {
             sHofMonPtr->mon[i].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-            sHofMonPtr->mon[i].tid = GetMonData(&gPlayerParty[i], MON_DATA_OT_ID);
             sHofMonPtr->mon[i].gender = GetMonData(&gPlayerParty[i], MON_DATA_GENDER);
             sHofMonPtr->mon[i].form = GetMonData(&gPlayerParty[i], MON_DATA_FORM);
             sHofMonPtr->mon[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
@@ -462,7 +459,6 @@ static void Task_Hof_InitMonData(u8 taskId)
         else
         {
             sHofMonPtr->mon[i].species = SPECIES_NONE;
-            sHofMonPtr->mon[i].tid = 0;
             sHofMonPtr->mon[i].gender = 0;
             sHofMonPtr->mon[i].form = 0;
             sHofMonPtr->mon[i].lvl = 0;
@@ -1196,10 +1192,6 @@ static void HallOfFame_PrintMonInfo(struct HallofFameMon* currMon, u8 unused1, u
         stringPtr = StringCopy(text, gText_Level);
         ConvertIntToDecimalStringN(stringPtr, currMon->lvl, STR_CONV_MODE_LEFT_ALIGN, 3);
         AddTextPrinterParameterized3(0, FONT_NORMAL, 0x24, 0x11, sMonInfoTextColors, TEXT_SKIP_DRAW, text);
-
-        stringPtr = StringCopy(text, gText_IDNumber);
-        ConvertIntToDecimalStringN(stringPtr, (u16)(currMon->tid), STR_CONV_MODE_LEADING_ZEROS, 5);
-        AddTextPrinterParameterized3(0, FONT_NORMAL, 0x68, 0x11, sMonInfoTextColors, TEXT_SKIP_DRAW, text);
 
         CopyWindowToVram(0, COPYWIN_FULL);
     }

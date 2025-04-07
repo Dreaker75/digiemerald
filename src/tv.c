@@ -3296,14 +3296,6 @@ void BufferMonNickname(void)
     StringGet_Nickname(gStringVar1);
 }
 
-void IsMonOTIDNotPlayers(void)
-{
-    if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
-        gSpecialVar_Result = FALSE;
-    else
-        gSpecialVar_Result = TRUE;
-}
-
 static u8 GetTVGroupByShowId(u8 kind)
 {
     if (kind == TVSHOW_OFF_AIR)

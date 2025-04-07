@@ -609,8 +609,7 @@ static void CreateEvolution(u16 evoSpecies)
               FALSE, 0,
               FALSE, 0,
               FALSE, 0,
-              FALSE, 0,
-              OT_ID_PLAYER_ID, 0);
+              FALSE, 0);
 
     SetMonData(&newMon, MON_DATA_NICKNAME, GetSpeciesName(evoSpecies));
     SetMonData(&newMon, MON_DATA_HELD_ITEM, &data);
