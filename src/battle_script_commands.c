@@ -1351,21 +1351,6 @@ static void Cmd_attackcanceler(void)
 
     gHitMarker &= ~HITMARKER_ALLOW_NO_PP;
 
-    if (!(gHitMarker & HITMARKER_OBEYS) && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
-    {
-        switch (IsMonDisobedient())
-        {
-        case 0:
-            break;
-        case 2:
-            gHitMarker |= HITMARKER_OBEYS;
-            return;
-        default:
-            gMoveResultFlags |= MOVE_RESULT_MISSED;
-            return;
-        }
-    }
-
     gHitMarker |= HITMARKER_OBEYS;
     // Check if no available target present on the field or if Sky Battles ban the move
     if ((NoTargetPresent(gBattlerAttacker, gCurrentMove)
