@@ -124,9 +124,8 @@ struct PokemonSubstruct0
     u32 unused_04:3;
     u8 ppBonuses;
     u8 friendship;
-    u16 pokeball:6; // 63 balls.
-    u16 nickname12:8; // 12th character of nickname.
-    u16 unused_0A:2;
+    u8 nickname12; // 12th character of nickname.
+    u8 unused_0A;
 };
 
 struct PokemonSubstruct1
@@ -750,7 +749,6 @@ bool8 IsMoveHM(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
 s8 GetFlavorRelationByNature(u8 nature, u8 flavor);
-bool8 IsTradedMon(struct Pokemon *mon);
 bool8 IsOtherTrainer(u32 otId, u8 *otName);
 void MonRestorePP(struct Pokemon *mon);
 void BoxMonRestorePP(struct BoxPokemon *boxMon);
