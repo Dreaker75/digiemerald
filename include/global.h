@@ -759,7 +759,6 @@ struct ContestWinner
     u8 gender:2;
     u8 unused1:1;
     u8 nature;
-    u32 trainerId;
     u16 species;
     u8 contestCategory;
     u8 monName[POKEMON_NAME_LENGTH + 1];
@@ -773,7 +772,6 @@ struct Mail
 {
     /*0x00*/ u16 words[MAIL_WORDS_COUNT];
     /*0x12*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
-    /*0x1A*/ u8 trainerId[TRAINER_ID_LENGTH];
     /*0x1E*/ u16 species;
     /*0x20*/ u16 itemId;
 };
